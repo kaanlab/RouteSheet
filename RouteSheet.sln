@@ -7,15 +7,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E11F747C-594
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{32D018A8-CA7C-409B-A871-6EF324EDDA69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Server", "RouteSheet\Server\RouteSheet.Server.csproj", "{51B9A357-A1BF-4195-94BC-2613CC96CFED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Server", "RouteSheet\Server\RouteSheet.Server.csproj", "{51B9A357-A1BF-4195-94BC-2613CC96CFED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Client", "RouteSheet\Client\RouteSheet.Client.csproj", "{230C60AA-4779-485D-8B1D-E40014ED96C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Client", "RouteSheet\Client\RouteSheet.Client.csproj", "{230C60AA-4779-485D-8B1D-E40014ED96C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Shared", "RouteSheet\Shared\RouteSheet.Shared.csproj", "{2775A5CD-E556-44A6-97EE-5EE58923C329}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Shared", "RouteSheet\Shared\RouteSheet.Shared.csproj", "{2775A5CD-E556-44A6-97EE-5EE58923C329}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Data", "RouteSheet.Data\RouteSheet.Data.csproj", "{FC1F62B5-9B44-4B8E-878F-2D0F782802FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Data", "RouteSheet.Data\RouteSheet.Data.csproj", "{FC1F62B5-9B44-4B8E-878F-2D0F782802FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Data.Tests", "RouteSheet.Data.Tests\RouteSheet.Data.Tests.csproj", "{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Data.Tests", "RouteSheet.Data.Tests\RouteSheet.Data.Tests.csproj", "{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Server.Tests", "RouteSheet.Server.Tests\RouteSheet.Server.Tests.csproj", "{C0B50422-CBC0-47EF-8495-83C657CF5F2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B50422-CBC0-47EF-8495-83C657CF5F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B50422-CBC0-47EF-8495-83C657CF5F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B50422-CBC0-47EF-8495-83C657CF5F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B50422-CBC0-47EF-8495-83C657CF5F2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{2775A5CD-E556-44A6-97EE-5EE58923C329} = {E11F747C-5946-401A-8D92-6EDA67943AB7}
 		{FC1F62B5-9B44-4B8E-878F-2D0F782802FE} = {E11F747C-5946-401A-8D92-6EDA67943AB7}
 		{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2} = {32D018A8-CA7C-409B-A871-6EF324EDDA69}
+		{C0B50422-CBC0-47EF-8495-83C657CF5F2E} = {32D018A8-CA7C-409B-A871-6EF324EDDA69}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42CE80BA-D889-4A4E-A99E-433E2703009D}

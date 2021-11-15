@@ -20,7 +20,7 @@ namespace RouteSheet.Data.Tests
         {
             DbContextOptions<AppDbContext> options;
             var builder = new DbContextOptionsBuilder<AppDbContext>();
-            builder.UseInMemoryDatabase("RouteSeetInMemory.db");
+            builder.UseInMemoryDatabase("RouteSheetInMemory.db");
             options = builder.Options;
             AppDbContext appDataContext = new AppDbContext(options);
             appDataContext.Database.EnsureDeleted();

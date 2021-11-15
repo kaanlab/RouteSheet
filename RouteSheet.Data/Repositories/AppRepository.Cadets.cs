@@ -16,19 +16,25 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
-                if (cadet.Classroom is null)
-                    throw new AppRepositoryExeption(new Exception("Classroom is null"));
+                if(cadet.Classroom is null)
+                    throw new NullReferenceException(nameof(cadet.Classroom));
 
-                EntityEntry<Cadet>? cadetEntry;                
-                if (cadet.Classroom?.Id > 0)
+                if (cadet.Classroom.Id > 0)
                 {
                     var classroom = await this.FindClassroomById(cadet.Classroom.Id);
+                    if (classroom is null)
+                        throw new NullReferenceException(nameof(classroom));
+
                     cadet.Classroom = classroom;
                 }                
 
-                cadetEntry = await _appDbContext.Cadets.AddAsync(cadet);
+                var cadetEntry = await _appDbContext.Cadets.AddAsync(cadet);
                 await _appDbContext.SaveChangesAsync();
                 return cadetEntry.Entity;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw new AppRepositoryExeption(ex);
             }
             catch (DbUpdateException ex)
             {
@@ -40,22 +46,26 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
-                var cadetInDb = await this.FindCadetById(cadet.Id);
-                if (cadetInDb is null)
-                    throw new AppRepositoryExeption(new Exception($"Can't find cadet with id {cadet.Id}"));
-
+                var cadetInDb = await this.FindCadetById(cadet.Id); 
                 cadetInDb.Name = cadet.Name;
 
-                var classroomInDb = await this.FindClassroomById(cadet.Classroom.Id);
-                if (classroomInDb is null)
-                    throw new AppRepositoryExeption(new Exception($"Can't find Classroom with id {cadet.Classroom.Id}"));
+                if (cadetInDb.Classroom is not null && cadet.Classroom.Id > 0)
+                {
+                    var classroom = await this.FindClassroomById(cadet.Classroom.Id);
+                    if (classroom is null)
+                        throw new NullReferenceException(nameof(classroom));
 
-                cadetInDb.Classroom = classroomInDb;
+                    cadetInDb.Classroom = classroom;
+                }
 
                 var cadetEntry = _appDbContext.Cadets.Update(cadetInDb);
                 await _appDbContext.SaveChangesAsync();
 
                 return cadetEntry.Entity;
+            }
+            catch (NullReferenceException ex)
+            {
+                throw new AppRepositoryExeption(ex);
             }
             catch (DbUpdateException ex)
             {
@@ -65,13 +75,25 @@ namespace RouteSheet.Data.Repositories
 
         public async ValueTask<Cadet> DeleteCadet(Cadet cadet)
         {
-            var cadetEntry = _appDbContext.Cadets.Remove(cadet);
-            await _appDbContext.SaveChangesAsync();
-            return cadetEntry.Entity;
+            try
+            {
+                var cadetInDb = await this.FindCadetById(cadet.Id);
+                var cadetEntry = _appDbContext.Cadets.Remove(cadetInDb);
+                await _appDbContext.SaveChangesAsync();
+                return cadetEntry.Entity;
+            }
+            catch(ArgumentNullException ex)
+            {
+                throw new AppRepositoryExeption(ex);
+            }
+            catch(NullReferenceException ex)
+            {
+                throw new AppRepositoryExeption(ex);
+            }
         }
 
         public IQueryable<Cadet> GetCadets() => _appDbContext.Cadets.AsQueryable();
 
-        public async ValueTask<Cadet> FindCadetById(int id) => await _appDbContext.Cadets.FindAsync(id);
+        public async ValueTask<Cadet> FindCadetById(int id) => await _appDbContext.Cadets.FindAsync(id);    
     }
 }

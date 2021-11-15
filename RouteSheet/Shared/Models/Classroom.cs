@@ -10,6 +10,7 @@ namespace RouteSheet.Shared.Models
     public class Classroom
     {
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 

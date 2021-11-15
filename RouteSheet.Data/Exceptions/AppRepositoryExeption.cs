@@ -8,6 +8,6 @@ namespace RouteSheet.Data.Exceptions
 {
     public class AppRepositoryExeption : Exception
     {
-        public AppRepositoryExeption(Exception innerException) : base(message: "Проблеммы с базой данных", innerException) { }
+        public AppRepositoryExeption(Exception innerException) : base(message: "Data layer problems, see details for more info", innerException) { }
     }
 }

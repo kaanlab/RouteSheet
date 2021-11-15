@@ -11,13 +11,13 @@ namespace RouteSheet.Data.Repositories
 {
     public partial class AppRepository
     {
-        public async ValueTask<Classroom> AddClassroom(Classroom classroom)
+        public async ValueTask<Lesson> AddLesson(Lesson lesson)
         {
             try
             {
-                var classroomEntry = await _appDbContext.Classrooms.AddAsync(classroom);
+                var lessonEntry = await _appDbContext.Lessons.AddAsync(lesson);
                 await _appDbContext.SaveChangesAsync();
-                return classroomEntry.Entity;
+                return lessonEntry.Entity;
             }
             catch (ArgumentNullException ex)
             {
@@ -28,17 +28,20 @@ namespace RouteSheet.Data.Repositories
                 throw new AppRepositoryExeption(ex);
             }
         }
-
-        public async ValueTask<Classroom> UpdateClassroom(Classroom classroom)
+        public async ValueTask<Lesson> UpdateLesson(Lesson lesson)
         {
             try
             {
-                var classroomInDb = await this.FindClassroomById(classroom.Id);
-                classroomInDb.Name = classroom.Name;
+                var lessonInDb = await this.FindLessonById(lesson.Id);
+                lessonInDb.Date = lesson.Date;
+                lessonInDb.Hour = lesson.Hour;
+                lessonInDb.Title = lesson.Title;
+                lessonInDb.TeacherName = lesson.TeacherName;
+                lessonInDb.Prioriy = lesson.Prioriy;
 
-                var classroomEntry = _appDbContext.Classrooms.Update(classroomInDb);
+                var lessonEntry = _appDbContext.Lessons.Update(lessonInDb);
                 await _appDbContext.SaveChangesAsync();
-                return classroomEntry.Entity;
+                return lessonEntry.Entity;
             }
             catch (ArgumentNullException ex)
             {
@@ -54,14 +57,14 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public async ValueTask<Classroom> DeleteClassroom(Classroom classroom)
+        public async ValueTask<Lesson> DeleteLesson(Lesson lesson)
         {
             try
             {
-                var classroomInDb = await this.FindClassroomById(classroom.Id);
-                var classroomEntry = _appDbContext.Classrooms.Remove(classroomInDb);
+                var lessonInDb = await this.FindLessonById(lesson.Id);
+                var lessonEntry = _appDbContext.Lessons.Remove(lessonInDb);
                 await _appDbContext.SaveChangesAsync();
-                return classroomEntry.Entity;
+                return lessonEntry.Entity;
             }
             catch (ArgumentNullException ex)
             {
@@ -73,8 +76,8 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public IQueryable<Classroom> GetClassroom() => _appDbContext.Classrooms.AsQueryable();
+        public IQueryable<Lesson> GetLessons() => _appDbContext.Lessons.AsQueryable();
 
-        public async ValueTask<Classroom> FindClassroomById(int id) => await _appDbContext.Classrooms.FindAsync(id);
+        public async ValueTask<Lesson> FindLessonById(int id) => await _appDbContext.Lessons.FindAsync(id);
     }
 }
