@@ -11,11 +11,11 @@ namespace RouteSheet.Data.Repositories
     public partial class AppRepository : IAppRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly UserManager<AppUser> _userManager;
+
         public AppRepository(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
-        }
-
-       
+        }       
     }
 }

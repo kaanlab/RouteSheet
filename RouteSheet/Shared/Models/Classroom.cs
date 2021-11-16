@@ -14,6 +14,7 @@ namespace RouteSheet.Shared.Models
         [Required]
         public string Name { get; set; }
 
-        //public int CadetId { get; set; }
+        //
+        public IEnumerable<Cadet> Cadets { get; set; }
     }
 }

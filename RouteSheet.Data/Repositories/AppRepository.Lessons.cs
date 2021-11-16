@@ -15,6 +15,30 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
+                if (lesson.AppUser is null)
+                    throw new NullReferenceException(nameof(lesson.AppUser));
+
+                if (string.IsNullOrEmpty(lesson.AppUser.Id))
+                {
+                    var user = await this.FindUserById(lesson.AppUser.Id);
+                    if (user is null)
+                        throw new NullReferenceException(nameof(user));
+
+                    lesson.AppUser = user;
+                }
+
+                if (lesson.Cadet is null)
+                    throw new NullReferenceException(nameof(lesson.Cadet));
+
+                if (lesson.Cadet.Id > 0)
+                {
+                    var cadet = await this.FindCadetById(lesson.Cadet.Id);
+                    if (cadet is null)
+                        throw new NullReferenceException(nameof(cadet));
+
+                    lesson.Cadet = cadet;
+                }
+
                 var lessonEntry = await _appDbContext.Lessons.AddAsync(lesson);
                 await _appDbContext.SaveChangesAsync();
                 return lessonEntry.Entity;
@@ -36,7 +60,7 @@ namespace RouteSheet.Data.Repositories
                 lessonInDb.Date = lesson.Date;
                 lessonInDb.Hour = lesson.Hour;
                 lessonInDb.Title = lesson.Title;
-                lessonInDb.TeacherName = lesson.TeacherName;
+                lessonInDb.AppUser = lesson.AppUser;
                 lessonInDb.Prioriy = lesson.Prioriy;
 
                 var lessonEntry = _appDbContext.Lessons.Update(lessonInDb);

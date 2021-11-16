@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace RouteSheet.Data.Repositories
 {
-    public interface IUserRepository
+    public partial interface IAppRepository
     {
-        IQueryable<AppUser> GetAppUsers();
+        IQueryable<AppUser> GetUsers();
+        ValueTask<AppUser> FindUserById(string id);
+        AppUser FindUserByUserName(string userName);
     }
 }

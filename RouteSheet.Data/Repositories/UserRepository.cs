@@ -15,5 +15,7 @@ namespace RouteSheet.Data.Repositories
         {
             _userManager = userManager;
         }
+
+        public IQueryable<AppUser> GetAppUsers() => _userManager.Users.AsQueryable();
     }
 }

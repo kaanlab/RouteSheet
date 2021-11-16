@@ -7,8 +7,18 @@ using System.Threading.Tasks;
 
 namespace RouteSheet.Shared.Models
 {
+    public enum AppUserType
+    {
+        Teacher,
+        Medic
+    }
+    
     public class AppUser : IdentityUser
     {
+        public AppUserType AppUserType { get; set; }
         public string DisplayName { get; set; }
+
+        //
+        public IEnumerable<Lesson> Lessons { get; set; }
     }
 }
