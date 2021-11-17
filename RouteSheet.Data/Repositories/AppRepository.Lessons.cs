@@ -43,6 +43,10 @@ namespace RouteSheet.Data.Repositories
                 await _appDbContext.SaveChangesAsync();
                 return lessonEntry.Entity;
             }
+            catch (NullReferenceException ex)
+            {
+                throw new AppRepositoryExeption(ex);
+            }
             catch (ArgumentNullException ex)
             {
                 throw new AppRepositoryExeption(ex);
@@ -56,12 +60,19 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
+                if (lesson.AppUser is null)
+                    throw new NullReferenceException(nameof(lesson.AppUser));
+
+                if (lesson.Cadet is null)
+                    throw new NullReferenceException(nameof(lesson.Cadet));
+
                 var lessonInDb = await this.FindLessonById(lesson.Id);
                 lessonInDb.Date = lesson.Date;
                 lessonInDb.Hour = lesson.Hour;
                 lessonInDb.Title = lesson.Title;
                 lessonInDb.AppUser = lesson.AppUser;
                 lessonInDb.Prioriy = lesson.Prioriy;
+                lessonInDb.Cadet = lesson.Cadet;
 
                 var lessonEntry = _appDbContext.Lessons.Update(lessonInDb);
                 await _appDbContext.SaveChangesAsync();

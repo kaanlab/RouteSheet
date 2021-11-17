@@ -32,6 +32,7 @@ namespace RouteSheet.Shared.Models
         public Cadet Cadet { get; set; }
 
         public string AppUserId { get; set; }
+        [Required]
         public AppUser AppUser { get; set; }
     }
 }

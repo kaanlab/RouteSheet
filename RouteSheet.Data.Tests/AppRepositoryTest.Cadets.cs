@@ -31,7 +31,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task AddCadet_WithNewClassroom_ReturnNewCadetWithNewClassroom()
+        public async Task AddCadet_WithNewClassroom_ReturnNewEntity()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Смирнов С.С.', 'classroom' : { 'name': '9Г'}  }";
@@ -47,7 +47,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task UpdateCadet_ChangeName_ReturnCadetWithUpdatedName()
+        public async Task UpdateCadet_ChangeName_ReturnUpdatedEntity()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Обновлено!', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -65,7 +65,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task UpdateCadet_ChangeClassroom_ReturnCadetWithUpdatedClassroom()
+        public async Task UpdateCadet_ChangeClassroom_ReturnUpdatedEntity()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 2, 'name': '8А'}  }";

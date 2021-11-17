@@ -29,7 +29,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task AddClassroom_EmptyClassroom_ShoudReturnException()
+        public async Task AddClassroom_EmptyClassroom_ReturnException()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ }";
@@ -44,7 +44,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task AddClassroom_NullClassroom_ShoudReturnException()
+        public async Task AddClassroom_NullClassroom_ReturnException()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             Func<Task> atc = async () => await sut.AddClassroom(null);
@@ -55,7 +55,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task UpdateClassroom_NullClassroom_ShoudReturnException()
+        public async Task UpdateClassroom_NullClassroom_ReturnException()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             Func<Task> atc = async () => await sut.UpdateClassroom(null);
@@ -66,7 +66,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task UpdateClassroom_UpdateName_ReturnUpdatedClassroomEntity()
+        public async Task UpdateClassroom_UpdateName_ReturnUpdatedEntity()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{'id': 1, 'name': '8Б' }";
@@ -81,7 +81,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact]
-        public async Task UpdateClassroom_EmptyClassroom_ShoudReturnException()
+        public async Task UpdateClassroom_EmptyClassroom_ReturnException()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ }";
