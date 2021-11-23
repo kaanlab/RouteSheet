@@ -24,7 +24,7 @@ namespace RouteSheet.Data.Tests
             {
                 AppUser = appUser,
                 Cadet = cadet,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Hour = 2,
                 Prioriy = Priority.Normal,
                 Title = "Программирование"
@@ -48,7 +48,7 @@ namespace RouteSheet.Data.Tests
             var lessonWithoutUser = new Lesson
             {
                 Cadet = cadet,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Hour = 2,
                 Prioriy = Priority.Normal,
                 Title = "Программирование"
@@ -71,7 +71,7 @@ namespace RouteSheet.Data.Tests
             var lessonWithoutUser = new Lesson
             {
                 AppUser = appUser,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Hour = 2,
                 Prioriy = Priority.Normal,
                 Title = "Программирование"
@@ -96,7 +96,7 @@ namespace RouteSheet.Data.Tests
             {
                 AppUser = appUser,
                 Cadet = cadet,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Hour = 2,
                 Prioriy = Priority.Normal
             };
@@ -237,7 +237,7 @@ namespace RouteSheet.Data.Tests
             {
                 Id = 30,
                 Cadet = cadet,
-                Date = DateOnly.FromDateTime(DateTime.Now),
+                Date = DateTime.Now,
                 Hour = 2,
                 Prioriy = Priority.Normal,
                 Title = "Программирование",

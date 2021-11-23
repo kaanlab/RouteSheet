@@ -52,8 +52,8 @@ namespace RouteSheet.Data.Tests
 
             appDataContext.Lessons.AddRange(
                 new Lesson[] {
-                    new Lesson { AppUser = appDataContext.Users.First(), Cadet = appDataContext.Cadets.First(), Date =  DateOnly.FromDateTime(DateTime.Now), Hour = 1, Prioriy = Priority.Normal, Title = "Робототехника" },
-                    new Lesson { AppUser = appDataContext.Users.Last(), Cadet = appDataContext.Cadets.Last(), Date =  DateOnly.FromDateTime(DateTime.Now.AddDays(1)), Hour = 2, Prioriy = Priority.Normal, Title = "Обследование"} 
+                    new Lesson { AppUser = appDataContext.Users.First(), Cadet = appDataContext.Cadets.First(), Date =  DateTime.Now, Hour = 1, Prioriy = Priority.Normal, Title = "Робототехника" },
+                    new Lesson { AppUser = appDataContext.Users.Last(), Cadet = appDataContext.Cadets.Last(), Date =  DateTime.Now.AddDays(1), Hour = 2, Prioriy = Priority.Normal, Title = "Обследование"} 
                 });
             appDataContext.SaveChanges();
             return appDataContext;

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RouteSheet.Data;
+using RouteSheet.Data.Repositories;
 using RouteSheet.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<AppDbContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddIdentity<AppUser, IdentityRole>(o => o.Password.RequireNonAlphanumeric = false)
     .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddScoped<IAppRepository, AppRepository>();
 
 var app = builder.Build();
 

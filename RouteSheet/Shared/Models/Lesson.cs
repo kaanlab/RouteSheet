@@ -17,7 +17,7 @@ namespace RouteSheet.Shared.Models
     {
         public int Id { get; set; }
         [Required]
-        public DateOnly? Date { get; set; }
+        public DateTime? Date { get; set; }
         [Required]
         public int Hour { get; set; }
         [Required]
