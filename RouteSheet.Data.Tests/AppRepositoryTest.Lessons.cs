@@ -19,8 +19,9 @@ namespace RouteSheet.Data.Tests
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var cadet = await sut.FindCadetById(1);
             var appUser = sut.FindUserByUserName("petrpku");
-           
-            var expectedLesson = new Lesson {
+
+            var expectedLesson = new Lesson
+            {
                 AppUser = appUser,
                 Cadet = cadet,
                 Date = DateOnly.FromDateTime(DateTime.Now),
@@ -43,7 +44,7 @@ namespace RouteSheet.Data.Tests
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var cadet = await sut.FindCadetById(1);
-            
+
             var lessonWithoutUser = new Lesson
             {
                 Cadet = cadet,
@@ -66,7 +67,7 @@ namespace RouteSheet.Data.Tests
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var appUser = sut.FindUserByUserName("petrpku");
-            
+
             var lessonWithoutUser = new Lesson
             {
                 AppUser = appUser,
@@ -90,7 +91,7 @@ namespace RouteSheet.Data.Tests
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var appUser = sut.FindUserByUserName("petrpku");
             var cadet = await sut.FindCadetById(1);
-            
+
             var lessonWithoutTitle = new Lesson
             {
                 AppUser = appUser,
@@ -125,7 +126,7 @@ namespace RouteSheet.Data.Tests
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var lessonInDb = await sut.FindLessonById(1);
-            
+
             var updatedLesson = new Lesson
             {
                 Id = lessonInDb.Id,
@@ -154,7 +155,7 @@ namespace RouteSheet.Data.Tests
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var lessonInDb = await sut.FindLessonById(1);
             var cadet = await sut.FindCadetById(2);
-            
+
             var lessonWithNewCadet = new Lesson
             {
                 Id = lessonInDb.Id,
@@ -181,7 +182,7 @@ namespace RouteSheet.Data.Tests
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var lessonInDb = await sut.FindLessonById(1);
             var appUser = sut.FindUserByUserName("petrpku");
-            
+
             var lessonWithNewUser = new Lesson
             {
                 Id = lessonInDb.Id,
@@ -224,6 +225,57 @@ namespace RouteSheet.Data.Tests
 
             Assert.Equal(2, sut.GetLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
+        }
+
+        [Fact]
+        public async Task DeleteLesson_WithWrongLesson_ReturnException()
+        {
+            IAppRepository sut = new AppRepository(AppDbContextInMemory());
+            var cadet = await sut.FindCadetById(2);
+            var appUser = sut.FindUserByUserName("petrpku");
+            var wrongLesson = new Lesson
+            {
+                Id = 30,
+                Cadet = cadet,
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                Hour = 2,
+                Prioriy = Priority.Normal,
+                Title = "Программирование",
+                AppUser = appUser
+            };
+
+            Func<Task> atc = async () => await sut.DeleteLesson(wrongLesson);
+
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+
+            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
+        }
+
+        [Fact]
+        public async Task DeleteLesson_WithExistingLesson_ReturnDeletedEntity()
+        {
+            IAppRepository sut = new AppRepository(AppDbContextInMemory());
+            var lessonInDb = await sut.FindLessonById(1);
+
+            var expectedLesson = new Lesson
+            {
+                Id = lessonInDb.Id,
+                Cadet = lessonInDb.Cadet,
+                Date = lessonInDb.Date,
+                Hour = lessonInDb.Hour,
+                Prioriy = lessonInDb.Prioriy,
+                Title = lessonInDb.Title,
+                AppUser = lessonInDb.AppUser
+            };
+
+            var actualLesson = await sut.DeleteLesson(expectedLesson);
+
+            var deletedLesson = await sut.FindLessonById(actualLesson.Id);
+
+            Assert.Equal(1, sut.GetLessons().Count());
+            Assert.Equal(expectedLesson.Id, actualLesson.Id);
+            Assert.Null(deletedLesson);
         }
     }
 }
