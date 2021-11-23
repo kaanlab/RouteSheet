@@ -16,6 +16,8 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
+                ArgumentNullException.ThrowIfNull(cadet);
+
                 if(cadet.Classroom is null)
                     throw new NullReferenceException(nameof(cadet.Classroom));
 
@@ -32,6 +34,10 @@ namespace RouteSheet.Data.Repositories
                 await _appDbContext.SaveChangesAsync();
                 return cadetEntry.Entity;
             }
+            catch (ArgumentNullException ex)
+            {
+                throw new AppRepositoryExeption(ex);
+            }
             catch (NullReferenceException ex)
             {
                 throw new AppRepositoryExeption(ex);
@@ -46,6 +52,8 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
+                ArgumentNullException.ThrowIfNull(cadet);
+
                 var cadetInDb = await this.FindCadetById(cadet.Id); 
                 cadetInDb.Name = cadet.Name;
 
@@ -63,6 +71,10 @@ namespace RouteSheet.Data.Repositories
 
                 return cadetEntry.Entity;
             }
+            catch (ArgumentNullException ex)
+            {
+                throw new AppRepositoryExeption(ex);
+            }
             catch (NullReferenceException ex)
             {
                 throw new AppRepositoryExeption(ex);
@@ -77,6 +89,8 @@ namespace RouteSheet.Data.Repositories
         {
             try
             {
+                ArgumentNullException.ThrowIfNull(cadet);
+
                 var cadetInDb = await this.FindCadetById(cadet.Id);
                 var cadetEntry = _appDbContext.Cadets.Remove(cadetInDb);
                 await _appDbContext.SaveChangesAsync();
