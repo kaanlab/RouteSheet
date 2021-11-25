@@ -16,7 +16,7 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Lesson>> GetLessons() =>
+        public ActionResult<IList<Lesson>> GetLessons() =>
             _appRepository.GetLessons() is IQueryable<Lesson> lessons
             ? Ok(lessons.ToList())
             : NotFound();

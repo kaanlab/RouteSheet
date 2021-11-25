@@ -13,8 +13,8 @@ namespace RouteSheet.Data.Tests
 {
     public partial class AppRepositoryTest
     {
-        [Fact]
-        public async Task AddCadet_WithExistingClassroom_ReturnNewCadet()
+        [Fact(DisplayName ="AddCadet: adding new cadet should return new entity")]
+        public async Task AddCadet_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Васечкин В.В.', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -30,8 +30,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
-        [Fact]
-        public async Task AddCadet_WithNewClassroom_ReturnNewEntity()
+        [Fact(DisplayName ="AddCadet: adding cadet with new classroom should return new entity")]
+        public async Task AddCadet_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Смирнов С.С.', 'classroom' : { 'name': '9Г'}  }";
@@ -46,8 +46,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
-        [Fact]
-        public async Task UpdateCadet_ChangeName_ReturnUpdatedEntity()
+        [Fact(DisplayName ="UpdateCadet: changing cadet property name should return updated entity")]
+        public async Task UpdateCadet_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Обновлено!', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -64,8 +64,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
-        [Fact]
-        public async Task UpdateCadet_ChangeClassroom_ReturnUpdatedEntity()
+        [Fact(DisplayName ="Updatecadet: changing cadet classroom property should return updated entity")]
+        public async Task UpdateCadet_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 2, 'name': '8А'}  }";
@@ -82,8 +82,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
-        [Fact]
-        public async Task UpdateCadet_ChangeClassroomWithNotExistingClassroom_ReturnExeption()
+        [Fact(DisplayName ="UpdateCadet: changing cadet classroom property with no existing classroom should return AppRepositoryExeption")]
+        public async Task UpdateCadet_003()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 3, 'name': 'не существующий!'}  }";
