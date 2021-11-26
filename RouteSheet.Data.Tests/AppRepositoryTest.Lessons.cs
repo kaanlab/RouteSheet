@@ -33,7 +33,7 @@ namespace RouteSheet.Data.Tests
             var addedLesson = await sut.AddLesson(expectedLesson);
             var actualLesson = await sut.FindLessonById(addedLesson.Id);
 
-            Assert.Equal(3, sut.GetLessons().Count());
+            Assert.Equal(3, sut.AllLessons().Count());
             Assert.Equal(expectedLesson.AppUser.Id, actualLesson.AppUser.Id);
             Assert.Equal(expectedLesson.Cadet.Id, actualLesson.Cadet.Id);
             Assert.Equal(expectedLesson.Id, actualLesson.Id);
@@ -56,9 +56,9 @@ namespace RouteSheet.Data.Tests
 
             Func<Task> atc = async () => await sut.AddLesson(lessonWithoutUser);
 
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -79,9 +79,9 @@ namespace RouteSheet.Data.Tests
 
             Func<Task> atc = async () => await sut.AddLesson(lessonWithoutUser);
 
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -103,9 +103,9 @@ namespace RouteSheet.Data.Tests
 
             Func<Task> atc = async () => await sut.AddLesson(lessonWithoutTitle);
 
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -115,9 +115,9 @@ namespace RouteSheet.Data.Tests
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
 
             Func<Task> atc = async () => await sut.AddLesson(null);
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -142,7 +142,7 @@ namespace RouteSheet.Data.Tests
             var expectedLesson = await sut.UpdateLesson(updatedLesson);
             var actualLesson = await sut.FindLessonById(1);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal(expectedLesson.AppUser.Id, actualLesson.AppUser.Id);
             Assert.Equal(expectedLesson.Cadet.Id, actualLesson.Cadet.Id);
             Assert.Equal(expectedLesson.Id, actualLesson.Id);
@@ -170,7 +170,7 @@ namespace RouteSheet.Data.Tests
             var expectedLesson = await sut.UpdateLesson(lessonWithNewCadet);
             var actualLesson = await sut.FindLessonById(1);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal(expectedLesson.AppUser.Id, actualLesson.AppUser.Id);
             Assert.Equal(expectedLesson.Cadet.Id, actualLesson.Cadet.Id);
             Assert.Equal(expectedLesson.Id, actualLesson.Id);
@@ -197,7 +197,7 @@ namespace RouteSheet.Data.Tests
             var expectedLesson = await sut.UpdateLesson(lessonWithNewUser);
             var actualLesson = await sut.FindLessonById(1);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal(expectedLesson.AppUser.Id, actualLesson.AppUser.Id);
             Assert.Equal(expectedLesson.Cadet.Id, actualLesson.Cadet.Id);
             Assert.Equal(expectedLesson.Id, actualLesson.Id);
@@ -221,9 +221,9 @@ namespace RouteSheet.Data.Tests
 
             Func<Task> atc = async () => await sut.UpdateLesson(lessonWithoutUser);
 
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -244,16 +244,16 @@ namespace RouteSheet.Data.Tests
                 AppUser = appUser
             };
 
-            Func<Task> atc = async () => await sut.DeleteLesson(wrongLesson);
+            Func<Task> atc = async () => await sut.DeleteLesson(wrongLesson.Id);
 
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryExeption>(atc);
+            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetLessons().Count());
+            Assert.Equal(2, sut.AllLessons().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact]
-        public async Task DeleteLesson_WithExistingLesson_ReturnDeletedEntity()
+        public async Task DeleteLesson_WithExistingLesson_Return_1()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var lessonInDb = await sut.FindLessonById(1);
@@ -269,12 +269,12 @@ namespace RouteSheet.Data.Tests
                 AppUser = lessonInDb.AppUser
             };
 
-            var actualLesson = await sut.DeleteLesson(expectedLesson);
+            var result = await sut.DeleteLesson(expectedLesson.Id);
 
-            var deletedLesson = await sut.FindLessonById(actualLesson.Id);
+            var deletedLesson = await sut.FindLessonById(expectedLesson.Id);
 
-            Assert.Equal(1, sut.GetLessons().Count());
-            Assert.Equal(expectedLesson.Id, actualLesson.Id);
+            Assert.Equal(1, sut.AllLessons().Count());
+            Assert.Equal(1, result);
             Assert.Null(deletedLesson);
         }
     }

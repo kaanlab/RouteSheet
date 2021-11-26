@@ -36,15 +36,15 @@ namespace RouteSheet.Data.Repositories
             }
             catch (ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (DbUpdateException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
 
@@ -73,15 +73,15 @@ namespace RouteSheet.Data.Repositories
             }
             catch (ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (DbUpdateException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
 
@@ -98,11 +98,11 @@ namespace RouteSheet.Data.Repositories
             }
             catch(ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch(NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
 

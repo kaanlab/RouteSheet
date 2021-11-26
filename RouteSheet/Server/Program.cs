@@ -1,8 +1,11 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RouteSheet.Data;
 using RouteSheet.Data.Repositories;
+
 using RouteSheet.Shared.Models;
 
 var builder = WebApplication.CreateBuilder(args);

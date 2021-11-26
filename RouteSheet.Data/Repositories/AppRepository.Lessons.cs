@@ -45,15 +45,15 @@ namespace RouteSheet.Data.Repositories
             }
             catch (NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (DbUpdateException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
         public async ValueTask<Lesson> UpdateLesson(Lesson lesson)
@@ -80,38 +80,38 @@ namespace RouteSheet.Data.Repositories
             }
             catch (ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (DbUpdateException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
 
-        public async ValueTask<Lesson> DeleteLesson(Lesson lesson)
+        public async ValueTask<int> DeleteLesson(int id)
         {
             try
             {
-                var lessonInDb = await this.FindLessonById(lesson.Id);
-                var lessonEntry = _appDbContext.Lessons.Remove(lessonInDb);
-                await _appDbContext.SaveChangesAsync();
-                return lessonEntry.Entity;
+                var lessonInDb = await this.FindLessonById(id);
+                _appDbContext.Lessons.Remove(lessonInDb);
+                var result = await _appDbContext.SaveChangesAsync();
+                return result;
             }
             catch (ArgumentNullException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
             catch (NullReferenceException ex)
             {
-                throw new AppRepositoryExeption(ex);
+                throw new AppRepositoryException(ex);
             }
         }
 
-        public IQueryable<Lesson> GetLessons() => _appDbContext.Lessons.AsQueryable();
+        public IQueryable<Lesson> AllLessons() => _appDbContext.Lessons.AsQueryable();
 
         public async ValueTask<Lesson> FindLessonById(int id) => await _appDbContext.Lessons.FindAsync(id);
     }

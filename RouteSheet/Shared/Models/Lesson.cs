@@ -12,7 +12,7 @@ namespace RouteSheet.Shared.Models
         High,
         Normal
     }
-    
+
     public class Lesson
     {
         public int Id { get; set; }

@@ -11,8 +11,8 @@ namespace RouteSheet.Data.Repositories
     {
         ValueTask<Lesson> AddLesson(Lesson lesson);
         ValueTask<Lesson> UpdateLesson(Lesson lesson);
-        ValueTask<Lesson> DeleteLesson(Lesson lesson);
-        IQueryable<Lesson> GetLessons();
+        ValueTask<int> DeleteLesson(int id);
+        IQueryable<Lesson> AllLessons();
         ValueTask<Lesson> FindLessonById(int id);
     }
 }
