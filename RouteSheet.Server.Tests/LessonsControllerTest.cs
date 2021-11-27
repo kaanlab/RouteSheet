@@ -20,7 +20,7 @@ namespace RouteSheet.Server.Tests
     {
 
         [Fact(DisplayName ="Getting 5 lessons should return Ok, be typeof<List> and count 5")]
-        public void GetLessons_001()
+        public void Test_001()
         {
             // Arrange
             var mockRepo = new Mock<IAppRepository>();
@@ -40,7 +40,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Getting empty list of lessons should return Ok, be typeof<List> and count 0")]
-        public void GetLessons_002()
+        public void Test_002()
         {
             // Arrange
             var mockRepo = new Mock<IAppRepository>();
@@ -59,7 +59,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Adding new lesson should return created lesson")]
-        public async Task AddLesson_001()
+        public async Task Test_003()
         {
             // Arrange
             var testLesson = Testlesson();
@@ -88,7 +88,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Updating existing lesson should return lesson with updated fields")]
-        public async Task UpdateLesson_001()
+        public async Task Test_004()
         {
             // Arrange
             var lessonInDb = Testlesson();
@@ -123,7 +123,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Updating not existing lesson should return Problem")]
-        public async Task UpdateLesson_002()
+        public async Task Test_005()
         {
             // Arrange
             var testLesson = Testlesson();
@@ -143,7 +143,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Delete existing lesson should return NoContent")]
-        public async Task Delete_Lesson_001()
+        public async Task Test_006()
         {
             // Arrange
             var lessonInDb = Testlesson();
@@ -161,7 +161,7 @@ namespace RouteSheet.Server.Tests
         }
 
         [Fact(DisplayName = "Delete not existing lesson should return BadRequest")]
-        public async Task Delete_Lesson_002()
+        public async Task Test_007()
         {
             // Arrange
             var lessonInDb = Testlesson();
