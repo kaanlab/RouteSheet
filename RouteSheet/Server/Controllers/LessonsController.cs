@@ -42,6 +42,10 @@ namespace RouteSheet.Server.Controllers
         {
             try
             {
+                var lessonToUpdate = await _appRepository.FindLessonById(lesson.Id);
+                if (lessonToUpdate is null)
+                    return Problem(title: "Api layer problems, see details for more info", detail: $"Can't update! Wrong id {lesson.Id}");
+
                 var updatedLesson = await _appRepository.UpdateLesson(lesson);
                 return Ok(updatedLesson);
             }
@@ -53,6 +57,6 @@ namespace RouteSheet.Server.Controllers
 
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult> Delete(int id) => 
-            await _appRepository.DeleteLesson(id) is 1 ? NoContent() : BadRequest();
+            await _appRepository.DeleteLesson(id) ? NoContent() : BadRequest();
     }
 }

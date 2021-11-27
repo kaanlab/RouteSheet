@@ -92,18 +92,17 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public async ValueTask<int> DeleteLesson(int id)
+        public async ValueTask<bool> DeleteLesson(int id)
         {
             try
             {
                 var lessonInDb = await this.FindLessonById(id);
+                if (lessonInDb is null)
+                    throw new NullReferenceException(nameof(lessonInDb));
+
                 _appDbContext.Lessons.Remove(lessonInDb);
                 var result = await _appDbContext.SaveChangesAsync();
-                return result;
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new AppRepositoryException(ex);
+                return result > 0 ? true : false;                
             }
             catch (NullReferenceException ex)
             {

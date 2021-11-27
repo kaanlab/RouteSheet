@@ -227,8 +227,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
-        [Fact]
-        public async Task DeleteLesson_WithWrongLesson_ReturnException()
+        [Fact(DisplayName ="Deleting wrong lesson should return AppRepositoryException")]
+        public async Task DeleteLesson_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var cadet = await sut.FindCadetById(2);
@@ -252,8 +252,8 @@ namespace RouteSheet.Data.Tests
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
-        [Fact]
-        public async Task DeleteLesson_WithExistingLesson_Return_1()
+        [Fact(DisplayName ="Deleting existing lesson should return true")]
+        public async Task DeleteLesson_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var lessonInDb = await sut.FindLessonById(1);
@@ -274,7 +274,7 @@ namespace RouteSheet.Data.Tests
             var deletedLesson = await sut.FindLessonById(expectedLesson.Id);
 
             Assert.Equal(1, sut.AllLessons().Count());
-            Assert.Equal(1, result);
+            Assert.True(result);
             Assert.Null(deletedLesson);
         }
     }

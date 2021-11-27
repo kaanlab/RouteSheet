@@ -119,7 +119,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.DeleteClassroom(null);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }

@@ -16,7 +16,7 @@ using Xunit;
 
 namespace RouteSheet.Server.Tests
 {
-    public class LessonControllerTest
+    public class LessonsControllerTest
     {
 
         [Fact(DisplayName ="Getting 5 lessons should return Ok, be typeof<List> and count 5")]
@@ -87,7 +87,7 @@ namespace RouteSheet.Server.Tests
             value.Id.Should().Be(testLesson.Id);
         }
 
-        [Fact(DisplayName = "Updating lesson should return lesson with updated fields")]
+        [Fact(DisplayName = "Updating existing lesson should return lesson with updated fields")]
         public async Task UpdateLesson_001()
         {
             // Arrange
@@ -106,6 +106,8 @@ namespace RouteSheet.Server.Tests
             };
 
             var mockRepo = new Mock<IAppRepository>();
+            mockRepo.Setup(repo => repo.FindLessonById(lessonInDb.Id))
+                .ReturnsAsync(lessonInDb);
             mockRepo.Setup(repo => repo.UpdateLesson(updatedLesson))
                 .ReturnsAsync(updatedLesson);
             var controller = new LessonsController(mockRepo.Object);
@@ -120,7 +122,27 @@ namespace RouteSheet.Server.Tests
             value.Title.Should().Be("new Title");
         }
 
-        [Fact(DisplayName = "Delete lesson should return NoContent")]
+        [Fact(DisplayName = "Updating not existing lesson should return Problem")]
+        public async Task UpdateLesson_002()
+        {
+            // Arrange
+            var testLesson = Testlesson();
+            
+            var mockRepo = new Mock<IAppRepository>();
+            mockRepo.Setup(repo => repo.FindLessonById(testLesson.Id))
+                .ReturnsAsync((Lesson)null);
+            var controller = new LessonsController(mockRepo.Object);
+
+            // Act
+            var cut = await controller.Update(testLesson);
+            var result = cut.Result as ObjectResult;
+            var value = result.Value as ProblemDetails;
+
+            result.StatusCode.Should().Be(500);
+            value.Title.Should().Be("Api layer problems, see details for more info");
+        }
+
+        [Fact(DisplayName = "Delete existing lesson should return NoContent")]
         public async Task Delete_Lesson_001()
         {
             // Arrange
@@ -128,7 +150,7 @@ namespace RouteSheet.Server.Tests
 
             var mockRepo = new Mock<IAppRepository>();
             mockRepo.Setup(repo => repo.DeleteLesson(lessonInDb.Id))
-                .ReturnsAsync(1);
+                .ReturnsAsync(true);
             var controller = new LessonsController(mockRepo.Object);
 
             // Act
@@ -136,6 +158,24 @@ namespace RouteSheet.Server.Tests
             var result = cut as NoContentResult;
 
             result.StatusCode.Should().Be(204);
+        }
+
+        [Fact(DisplayName = "Delete not existing lesson should return BadRequest")]
+        public async Task Delete_Lesson_002()
+        {
+            // Arrange
+            var lessonInDb = Testlesson();
+
+            var mockRepo = new Mock<IAppRepository>();
+            mockRepo.Setup(repo => repo.DeleteLesson(lessonInDb.Id))
+                .ReturnsAsync(false);
+            var controller = new LessonsController(mockRepo.Object);
+
+            // Act
+            var cut = await controller.Delete(lessonInDb.Id);
+            var result = cut as BadRequestResult;
+
+            result.StatusCode.Should().Be(400);
         }
 
         private Lesson Testlesson()
