@@ -85,20 +85,17 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public async ValueTask<Cadet> DeleteCadet(Cadet cadet)
+        public async ValueTask<bool> DeleteCadet(int id)
         {
             try
             {
-                ArgumentNullException.ThrowIfNull(cadet);
+                var cadetInDb = await this.FindCadetById(id);
+                if (cadetInDb is null)
+                    throw new NullReferenceException(nameof(cadetInDb));
 
-                var cadetInDb = await this.FindCadetById(cadet.Id);
-                var cadetEntry = _appDbContext.Cadets.Remove(cadetInDb);
-                await _appDbContext.SaveChangesAsync();
-                return cadetEntry.Entity;
-            }
-            catch(ArgumentNullException ex)
-            {
-                throw new AppRepositoryException(ex);
+                _appDbContext.Cadets.Remove(cadetInDb);
+                var result = await _appDbContext.SaveChangesAsync();
+                return result > 0 ? true : false; 
             }
             catch(NullReferenceException ex)
             {
@@ -106,7 +103,7 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public IQueryable<Cadet> GetCadets() => _appDbContext.Cadets.AsQueryable();
+        public IQueryable<Cadet> AllCadets() => _appDbContext.Cadets.AsQueryable();
 
         public async ValueTask<Cadet> FindCadetById(int id) => await _appDbContext.Cadets.FindAsync(id);    
     }

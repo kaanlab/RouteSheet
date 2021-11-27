@@ -11,8 +11,8 @@ namespace RouteSheet.Data.Repositories
     {
         ValueTask<Cadet> AddCadet(Cadet cadet);
         ValueTask<Cadet> UpdateCadet(Cadet cadet);
-        ValueTask<Cadet> DeleteCadet(Cadet cadet);
-        IQueryable<Cadet> GetCadets();
+        ValueTask<bool> DeleteCadet(int id);
+        IQueryable<Cadet> AllCadets();
         ValueTask<Cadet> FindCadetById(int id);
     }
 }

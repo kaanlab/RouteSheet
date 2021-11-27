@@ -23,7 +23,7 @@ namespace RouteSheet.Data.Tests
             var addedCadet = await sut.AddCadet(expectedCadet);
             var actualCadet = await sut.FindCadetById(addedCadet.Id);
 
-            Assert.Equal(3, sut.GetCadets().Count());
+            Assert.Equal(3, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Id, actualCadet.Classroom.Id);
@@ -40,7 +40,7 @@ namespace RouteSheet.Data.Tests
             var addedCadet = await sut.AddCadet(expectedCadet);
             var actualCadet = await sut.FindCadetById(addedCadet.Id);
 
-            Assert.Equal(3, sut.GetCadets().Count());
+            Assert.Equal(3, sut.AllCadets().Count());
             Assert.Equal(3, sut.GetClassroom().Count());
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
@@ -56,7 +56,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddCadet(emptyCadet);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -71,7 +71,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddCadet(cadetWithoutName);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -86,7 +86,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddCadet(cadetWithoutClassroom);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -101,7 +101,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddCadet(cadetWithNotExistingClassroom);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -114,7 +114,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddCadet(null);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -129,7 +129,7 @@ namespace RouteSheet.Data.Tests
             var updatedCadet = await sut.UpdateCadet(expectedCadet);
             var actualCadet = await sut.FindCadetById(updatedCadet.Id);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal(expectedCadet.Id, actualCadet.Id);
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
@@ -147,7 +147,7 @@ namespace RouteSheet.Data.Tests
             var updatedCadet = await sut.UpdateCadet(expectedCadet);
             var actualCadet = await sut.FindCadetById(updatedCadet.Id);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal(expectedCadet.Id, actualCadet.Id);
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
@@ -165,7 +165,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.UpdateCadet(cadetWithNotExistingClassroom);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -180,7 +180,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.UpdateCadet(notExistingCadet);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
@@ -193,39 +193,26 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.UpdateCadet(null);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetCadets().Count());
+            Assert.Equal(2, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
-        [Fact(DisplayName ="Deleting cadet with existing cadet should return deleted entity")]
+        [Fact(DisplayName = "Deleting cadet with existing cadet should return true")]
         public async Task DeleteCadet_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
             var expectedCadet = await JsonConvert.DeserializeObjectAsync<Cadet>(json);
 
-            var actualCadet = await sut.DeleteCadet(expectedCadet);
+            var result = await sut.DeleteCadet(expectedCadet.Id);
 
-            var deletedCadet = await sut.FindCadetById(actualCadet.Id);
+            var deletedCadet = await sut.FindCadetById(expectedCadet.Id);
 
-            Assert.Equal(1, sut.GetCadets().Count());
+            Assert.Equal(1, sut.AllCadets().Count());
             Assert.Equal(2, sut.GetClassroom().Count());
-            Assert.Equal(expectedCadet.Id, actualCadet.Id);
+            Assert.True(result);
             Assert.Null(deletedCadet);
-        }
-
-        [Fact(DisplayName = "Deleting null cadet should return AppRepositoryExeption")]
-        public async Task DeleteCadet_002()
-        {
-            IAppRepository sut = new AppRepository(AppDbContextInMemory());
-
-            Func<Task> atc = async () => await sut.DeleteCadet(null);
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
-
-            Assert.Equal(2, sut.GetCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
-            Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Deleting cadet with no existing cadet should return AppRepositoryExeption")]
@@ -235,7 +222,7 @@ namespace RouteSheet.Data.Tests
             string json = @"{ 'id': 3, 'name': 'не существующий!', 'classroom' : { 'id': 2, 'name': '8А'}  }";
             var wrongCadet = await JsonConvert.DeserializeObjectAsync<Cadet>(json);
 
-            Func<Task> atc = async () => await sut.DeleteCadet(wrongCadet);
+            Func<Task> atc = async () => await sut.DeleteCadet(wrongCadet.Id);
 
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
@@ -243,7 +230,7 @@ namespace RouteSheet.Data.Tests
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
-        [Fact(DisplayName ="Find cadet with wrong id should return null")]
+        [Fact(DisplayName = "Find cadet with wrong id should return null")]
         public async Task FindCadetById_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
@@ -252,7 +239,7 @@ namespace RouteSheet.Data.Tests
 
             Assert.Null(actualcadet);
         }
-        [Fact(DisplayName ="Find cadet with existing cadet should return cadet entity")]
+        [Fact(DisplayName = "Find cadet with existing cadet should return cadet entity")]
         public async Task FindCadetById_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
