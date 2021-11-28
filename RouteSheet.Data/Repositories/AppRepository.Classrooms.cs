@@ -54,26 +54,26 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public async ValueTask<Classroom> DeleteClassroom(Classroom classroom)
+        public async ValueTask<bool> DeleteClassroom(int id)
         {
             try
             {
-                var classroomInDb = await this.FindClassroomById(classroom.Id);
-                var classroomEntry = _appDbContext.Classrooms.Remove(classroomInDb);
-                await _appDbContext.SaveChangesAsync();
-                return classroomEntry.Entity;
+                var classroomInDb = await this.FindClassroomById(id);
+                if (classroomInDb is null)
+                    throw new NullReferenceException(nameof(classroomInDb));
+
+                _appDbContext.Classrooms.Remove(classroomInDb);
+                var result = await _appDbContext.SaveChangesAsync();
+                return result > 0 ? true : false;
             }
-            catch (ArgumentNullException ex)
-            {
-                throw new AppRepositoryException(ex);
-            }
+
             catch (NullReferenceException ex)
             {
                 throw new AppRepositoryException(ex);
             }
         }
 
-        public IQueryable<Classroom> GetClassroom() => _appDbContext.Classrooms.AsQueryable();
+        public IQueryable<Classroom> AllClassrooms() => _appDbContext.Classrooms.AsQueryable();
 
         public async ValueTask<Classroom> FindClassroomById(int id) => await _appDbContext.Classrooms.FindAsync(id);
     }

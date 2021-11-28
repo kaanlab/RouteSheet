@@ -13,8 +13,8 @@ namespace RouteSheet.Data.Tests
 {
     public partial class AppRepositoryTest
     {
-        [Fact]
-        public async Task AddClassroom_NewClassroom_ReturnNewEntity()
+        [Fact(DisplayName ="Adding classroom should return new entity")]
+        public async Task Classroom_Test_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': '5Г' }";
@@ -23,13 +23,13 @@ namespace RouteSheet.Data.Tests
             var addedClassroom = await sut.AddClassroom(expectedClassroom);
             var actualClassroom = await sut.FindClassroomById(addedClassroom.Id);
 
-            Assert.Equal(3, sut.GetClassroom().Count());
+            Assert.Equal(3, sut.AllClassrooms().Count());
             Assert.Equal(expectedClassroom.Name, actualClassroom.Name);
             Assert.Equal(expectedClassroom.Id, actualClassroom.Id);
         }
 
-        [Fact]
-        public async Task AddClassroom_EmptyClassroom_ReturnException()
+        [Fact(DisplayName ="Adding empty classroom shouil return AppRepositoryException")]
+        public async Task Classroom_Test_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ }";
@@ -39,7 +39,7 @@ namespace RouteSheet.Data.Tests
 
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -50,7 +50,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.AddClassroom(null);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -61,7 +61,7 @@ namespace RouteSheet.Data.Tests
             Func<Task> atc = async () => await sut.UpdateClassroom(null);
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
@@ -75,7 +75,7 @@ namespace RouteSheet.Data.Tests
             var addedClassroom = await sut.UpdateClassroom(expectedClassroom);
             var actualClassroom = await sut.FindClassroomById(addedClassroom.Id);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal(expectedClassroom.Name, actualClassroom.Name);
             Assert.Equal(expectedClassroom.Id, actualClassroom.Id);
         }
@@ -91,51 +91,38 @@ namespace RouteSheet.Data.Tests
 
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
-        [Fact]
-        public async Task DeleteClassroom_WithExistingClassroom_ReturnDeletedEntity()
+        [Fact(DisplayName ="Deleting existing classroom should return true")]
+        public async Task DeleteClassroom_WithExistingClassroom_Return_True()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': '7Б' }";
             var expectedClassroom = await JsonConvert.DeserializeObjectAsync<Classroom>(json);
 
-            var actualClassroom = await sut.DeleteClassroom(expectedClassroom);
+            var result = await sut.DeleteClassroom(expectedClassroom.Id);
 
-            var deletedCadet = await sut.FindClassroomById(actualClassroom.Id);
+            var deletedCadet = await sut.FindClassroomById(expectedClassroom.Id);
 
-            Assert.Equal(1, sut.GetClassroom().Count());
-            Assert.Equal(expectedClassroom.Id, actualClassroom.Id);
+            Assert.Equal(1, sut.AllClassrooms().Count());
+            Assert.True(result);
             Assert.Null(deletedCadet);
-        }
+        }        
 
-        [Fact]
-        public async Task DeleteClassroom_NullClassroom_ReturnException()
-        {
-            IAppRepository sut = new AppRepository(AppDbContextInMemory());
-
-            Func<Task> atc = async () => await sut.DeleteClassroom(null);
-            var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
-
-            Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
-            Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
-        }
-
-        [Fact]
+        [Fact(DisplayName ="Deleting wrong classroom should return AppRepositortyException")]
         public async Task DeleteClassroom_WithWrongClassroom_ReturnException()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 5, 'name': 'не существующий!' }";
             var wrongClassroom = await JsonConvert.DeserializeObjectAsync<Classroom>(json);
 
-            Func<Task> atc = async () => await sut.DeleteClassroom(wrongClassroom);
+            Func<Task> atc = async () => await sut.DeleteClassroom(wrongClassroom.Id);
 
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
     }

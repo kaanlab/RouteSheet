@@ -9,10 +9,10 @@ namespace RouteSheet.Data.Repositories
 {
     public partial interface IAppRepository
     {
-        ValueTask<Classroom> AddClassroom(Classroom cadet);
-        ValueTask<Classroom> UpdateClassroom(Classroom cadet);
-        ValueTask<Classroom> DeleteClassroom(Classroom cadet);
-        IQueryable<Classroom> GetClassroom();
+        ValueTask<Classroom> AddClassroom(Classroom classroom);
+        ValueTask<Classroom> UpdateClassroom(Classroom classroom);
+        ValueTask<bool> DeleteClassroom(int id);
+        IQueryable<Classroom> AllClassrooms();
         ValueTask<Classroom> FindClassroomById(int id);
     }
 }

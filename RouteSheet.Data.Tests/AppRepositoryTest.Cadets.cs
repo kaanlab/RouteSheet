@@ -14,7 +14,7 @@ namespace RouteSheet.Data.Tests
     public partial class AppRepositoryTest
     {
         [Fact(DisplayName = "Adding new cadet should return new entity")]
-        public async Task AddCadet_001()
+        public async Task Cadet_Test_001()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Васечкин В.В.', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -24,14 +24,14 @@ namespace RouteSheet.Data.Tests
             var actualCadet = await sut.FindCadetById(addedCadet.Id);
 
             Assert.Equal(3, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Id, actualCadet.Classroom.Id);
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
         [Fact(DisplayName = "Adding cadet with new classroom should return new entity")]
-        public async Task AddCadet_002()
+        public async Task Cadet_Test_002()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Смирнов С.С.', 'classroom' : { 'name': '9Г'}  }";
@@ -41,13 +41,13 @@ namespace RouteSheet.Data.Tests
             var actualCadet = await sut.FindCadetById(addedCadet.Id);
 
             Assert.Equal(3, sut.AllCadets().Count());
-            Assert.Equal(3, sut.GetClassroom().Count());
+            Assert.Equal(3, sut.AllClassrooms().Count());
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Name, actualCadet.Classroom.Name);
         }
 
         [Fact(DisplayName = "Adding empty cadet should return AppRepositoryExeption")]
-        public async Task AddCadet_003()
+        public async Task Cadet_Test_003()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ }";
@@ -57,12 +57,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Adding cadet without name should return AppRepositoryExeption")]
-        public async Task AddCadet_004()
+        public async Task Cadet_Test_004()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -72,12 +72,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Adding cadet without classroom should return AppRepositoryExeption")]
-        public async Task AddCadet_005()
+        public async Task Cadet_Test_005()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Васечкин В.В.' }";
@@ -87,12 +87,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Adding cadet with no existing classroom should return AppRepositoryExeption")]
-        public async Task AddCadet_006()
+        public async Task Cadet_Test_006()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'name': 'Васечкин В.В.','classroom' : { 'id': 3, 'name': 'не существующий!'}   }";
@@ -102,12 +102,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Adding null cadet should return AppRepositoryExeption")]
-        public async Task AddCadet_007()
+        public async Task Cadet_Test_007()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
 
@@ -115,12 +115,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Updating cadet property name should return updated entity")]
-        public async Task UpdateCadet_001()
+        public async Task Cadet_Test_008()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Обновлено!', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -130,7 +130,7 @@ namespace RouteSheet.Data.Tests
             var actualCadet = await sut.FindCadetById(updatedCadet.Id);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal(expectedCadet.Id, actualCadet.Id);
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Id, actualCadet.Classroom.Id);
@@ -138,7 +138,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact(DisplayName = "Updating cadet classroom property should return updated entity")]
-        public async Task UpdateCadet_002()
+        public async Task Cadet_Test_009()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 2, 'name': '8А'}  }";
@@ -148,7 +148,7 @@ namespace RouteSheet.Data.Tests
             var actualCadet = await sut.FindCadetById(updatedCadet.Id);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal(expectedCadet.Id, actualCadet.Id);
             Assert.Equal(expectedCadet.Name, actualCadet.Name);
             Assert.Equal(expectedCadet.Classroom.Id, actualCadet.Classroom.Id);
@@ -156,7 +156,7 @@ namespace RouteSheet.Data.Tests
         }
 
         [Fact(DisplayName = "Updating cadet classroom property with no existing classroom should return AppRepositoryExeption")]
-        public async Task UpdateCadet_003()
+        public async Task Cadet_Test_010()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 3, 'name': 'не существующий!'}  }";
@@ -166,12 +166,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Updating cadet with no existing cadet should return AppRepositoryExeption")]
-        public async Task UpdateCadet_004()
+        public async Task Cadet_Test_011()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 3, 'name': 'не существующий!', 'classroom' : { 'id': 2, 'name': '8А'}  }";
@@ -181,12 +181,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Updating cadet with null cadet should return AppRepositoryExeption")]
-        public async Task UpdateCadet_005()
+        public async Task Cadet_Test_012()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
 
@@ -194,12 +194,12 @@ namespace RouteSheet.Data.Tests
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
             Assert.Equal(2, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Deleting cadet with existing cadet should return true")]
-        public async Task DeleteCadet_001()
+        public async Task Cadet_Test_013()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 1, 'name': 'Петров П.П.', 'classroom' : { 'id': 1, 'name': '7Б'}  }";
@@ -210,13 +210,13 @@ namespace RouteSheet.Data.Tests
             var deletedCadet = await sut.FindCadetById(expectedCadet.Id);
 
             Assert.Equal(1, sut.AllCadets().Count());
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.True(result);
             Assert.Null(deletedCadet);
         }
 
         [Fact(DisplayName = "Deleting cadet with no existing cadet should return AppRepositoryExeption")]
-        public async Task DeleteCadet_003()
+        public async Task Cadet_Test_014()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             string json = @"{ 'id': 3, 'name': 'не существующий!', 'classroom' : { 'id': 2, 'name': '8А'}  }";
@@ -226,12 +226,12 @@ namespace RouteSheet.Data.Tests
 
             var assertExeption = await Assert.ThrowsAsync<AppRepositoryException>(atc);
 
-            Assert.Equal(2, sut.GetClassroom().Count());
+            Assert.Equal(2, sut.AllClassrooms().Count());
             Assert.Equal("Data layer problems, see details for more info", assertExeption.Message);
         }
 
         [Fact(DisplayName = "Find cadet with wrong id should return null")]
-        public async Task FindCadetById_001()
+        public async Task Cadet_Test_015()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
 
@@ -240,7 +240,7 @@ namespace RouteSheet.Data.Tests
             Assert.Null(actualcadet);
         }
         [Fact(DisplayName = "Find cadet with existing cadet should return cadet entity")]
-        public async Task FindCadetById_002()
+        public async Task Cadet_Test_016()
         {
             IAppRepository sut = new AppRepository(AppDbContextInMemory());
             var expectedCadet = new Cadet { Name = "Петров П.П.", Classroom = new Classroom { Name = "7Б" } };
