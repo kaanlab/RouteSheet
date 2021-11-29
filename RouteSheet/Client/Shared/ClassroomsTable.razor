@@ -1,0 +1,108 @@
+﻿@using System.Text.Json
+
+@inject HttpClient httpClient
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@if (classrooms is not null)
+{
+    <MudTable Items="@classrooms" Hover="true" Class="my-5">
+        <ToolBarContent>
+            <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddClassroom" Class="mr-3" />
+            <MudText Typo="Typo.h6">Классы</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Класс</MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Класс">@context.Name</MudTd>
+            <MudTd><MudButton Color="Color.Info" @onclick="@((e) => UpdateClassroom(context))">Изменить</MudButton></MudTd>
+            <MudTd><MudButton Color="Color.Error" @onclick="@((e) => DeleteClassroom(context))">Удалить</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <MudProgressCircular Indeterminate="true"></MudProgressCircular>
+}
+
+
+
+@code {
+    private List<Classroom> classrooms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        classrooms = await httpClient.GetFromJsonAsync<List<Classroom>>("api/classrooms/all");
+    }
+
+    private async Task AddClassroom()
+    {
+        var dialog = DialogService.Show<ClassroomAddOrUpdateDialog>("Добавление нового класса");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PostAsJsonAsync<Classroom>("api/classrooms/add", result.Data as Classroom);
+            if (response.IsSuccessStatusCode)
+            {
+                var addedClassroom = await response.Content.ReadFromJsonAsync<Classroom>();
+                classrooms.Add(addedClassroom);
+                Snackbar.Add("Класс успешно добавлен!", Severity.Success);
+            }
+            else
+            {
+                var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                Snackbar.Add($"Не могу добавить класс! \\n {problem.Title} \\n", Severity.Error);
+            }
+        }
+    }
+
+    private async Task UpdateClassroom(Classroom context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<ClassroomAddOrUpdateDialog>("Обновить данные о классе", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PutAsJsonAsync<Classroom>("api/classrooms/update", result.Data as Classroom);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedClassroom = await response.Content.ReadFromJsonAsync<Classroom>();
+                var index = classrooms.IndexOf(context);
+                classrooms.Remove(context);
+                classrooms.Insert(index, updatedClassroom);
+                Snackbar.Add("Информация о классе успешно обновлена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу обновить информацию о классе!", Severity.Error);
+            }
+        }
+    }
+
+    private async Task DeleteClassroom(Classroom context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<ClassroomDeleteDialog>("Удалить класс", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var classroomToDelete = result.Data as Classroom;
+            var response = await httpClient.DeleteAsync($"api/classrooms/delete/{classroomToDelete.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                classrooms.Remove(classroomToDelete);
+                Snackbar.Add("Информация о классе успешно удалена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу удалить информацию о кадете!", Severity.Error);
+            }
+        }
+    }
+
+}

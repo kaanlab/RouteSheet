@@ -12,6 +12,14 @@ namespace RouteSheet.Data
     public  class AppDbContext : IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AppUser>().Property(e => e.AppUserType).HasConversion<string>();
+            modelBuilder.Entity<Lesson>().Property(e => e.Prioriy).HasConversion<string>();
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<Cadet> Cadets { get; set; }

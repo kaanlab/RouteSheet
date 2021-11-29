@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Data", "RouteShe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Data.Tests", "RouteSheet.Data.Tests\RouteSheet.Data.Tests.csproj", "{E74A8AA6-3BFA-4859-90E2-4EAEB9D9DFD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RouteSheet.Server.Tests", "RouteSheet.Server.Tests\RouteSheet.Server.Tests.csproj", "{C0B50422-CBC0-47EF-8495-83C657CF5F2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RouteSheet.Server.Tests", "RouteSheet.Server.Tests\RouteSheet.Server.Tests.csproj", "{C0B50422-CBC0-47EF-8495-83C657CF5F2E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

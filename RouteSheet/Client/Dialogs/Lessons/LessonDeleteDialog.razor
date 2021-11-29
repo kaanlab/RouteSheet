@@ -1,0 +1,30 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Error">
+            <MudIcon Icon="@Icons.Material.Filled.Delete" Title="Delete" />
+            @MudDialog.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>@Context.Date</MudText>
+        <MudText>@Context.Hour</MudText>
+        <MudText>@Context.Cadet?.Name</MudText>
+        <MudText>@Context.Title</MudText>
+        <MudText>@Context.AppUser?.DisplayName</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="DeleteLesson">Удалить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Lesson Context { get; set; }
+
+    void DeleteLesson() => MudDialog.Close(DialogResult.Ok(Context));
+
+    void Cancel() => MudDialog.Cancel();
+}

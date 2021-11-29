@@ -1,0 +1,42 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Info">
+            <MudIcon Icon="@Icons.Material.Filled.Update" Title="Add" />
+            @MudDialog.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudDatePicker Label="Дата занятия" @bind-Date="Context.Date" Orientation="Orientation.Landscape" DisableToolbar="true"/>
+        <MudNumericField @bind-Value="Context.Hour" Label="Час занятия" Variant="Variant.Text" Min="1" Max="4" />
+        <MudTextField T="string" Label="Название" @bind-Text="Context.Title" />
+        <MudTextField T="string" Label="Имя преподавателя" @bind-Text="Context.AppUser.DisplayName" />
+        <br />
+        <div>
+            <MudText Typo="Typo.h5">Приоритет</MudText><br />
+            <MudSelect @bind-Value="Context.Prioriy" >
+                @foreach(var item in Enum.GetValues(typeof(Priority)))
+                {
+                    <MudSelectItem Value="@item">@item</MudSelectItem> 
+                }
+            </MudSelect><br />
+            <MudText>Приоритет занятия: @Context.Prioriy</MudText>
+        </div>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+        
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdateLesson">Обновить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Lesson Context { get; set; } = new Lesson();
+
+    public void AddOrUpdateLesson() => MudDialog.Close(DialogResult.Ok(Context));
+
+    private void Cancel() => MudDialog.Cancel();
+
+}

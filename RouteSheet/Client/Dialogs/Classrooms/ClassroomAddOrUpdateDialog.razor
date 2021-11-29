@@ -1,0 +1,27 @@
+﻿<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Info">
+            <MudIcon Icon="@Icons.Material.Filled.Update" Title="Add" />
+            @MudDialog.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField T="string" Label="Название" @bind-Text="Context.Name" />        
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+        
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdateClassroom">Сохранить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Classroom Context { get; set; } = new Classroom();
+
+    public void AddOrUpdateClassroom() => MudDialog.Close(DialogResult.Ok(Context));
+
+    private void Cancel() => MudDialog.Cancel();
+}

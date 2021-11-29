@@ -12,7 +12,7 @@ using RouteSheet.Data;
 namespace RouteSheet.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211123143223_InitMigration")]
+    [Migration("20211129144841_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,8 +165,9 @@ namespace RouteSheet.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("AppUserType")
-                        .HasColumnType("int");
+                    b.Property<string>("AppUserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -284,14 +285,14 @@ namespace RouteSheet.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Date")
-                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Hour")
                         .HasColumnType("int");
 
-                    b.Property<int>("Prioriy")
-                        .HasColumnType("int");
+                    b.Property<string>("Prioriy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()

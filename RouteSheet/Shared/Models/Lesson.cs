@@ -9,20 +9,21 @@ namespace RouteSheet.Shared.Models
 {
     public enum Priority
     {
+        [Display(Name ="Высокий")]
         High,
+        [Display(Name ="Нормальный")]
         Normal
     }
 
     public class Lesson
     {
         public int Id { get; set; }
-        [Required]
+
         public DateTime? Date { get; set; }
         [Required]
         public int Hour { get; set; }
         [Required]
         public string Title { get; set; }
-
         [Required]
         public Priority Prioriy { get; set; }
 

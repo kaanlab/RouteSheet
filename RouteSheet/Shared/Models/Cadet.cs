@@ -17,6 +17,6 @@ namespace RouteSheet.Shared.Models
         [Required]
         public Classroom Classroom { get; set; }
 
-        public IEnumerable<Lesson> Lessons { get; set; }
+        public IEnumerable<Lesson>? Lessons { get; set; }
     }
 }

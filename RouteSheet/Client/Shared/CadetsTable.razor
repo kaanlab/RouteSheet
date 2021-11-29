@@ -1,0 +1,108 @@
+﻿@inject HttpClient httpClient
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@if (cadets is not null)
+{
+    <MudTable Items="@cadets" Hover="true" Class="my-5">
+        <ToolBarContent>
+            <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddCadet" Class="mr-3" />
+            <MudText Typo="Typo.h6">Кадеты</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Ф.И.О</MudTh>
+            <MudTh>Класс</MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Ф.И.О">@context.Name</MudTd>
+            <MudTd DataLabel="Класс">@context.Classroom?.Name</MudTd>
+            <MudTd><MudButton Color="Color.Info" @onclick="@((e) => UpdateCadet(context))">Изменить</MudButton></MudTd>
+            <MudTd><MudButton Color="Color.Error" @onclick="@((e) => DeleteCadet(context))">Удалить</MudButton></MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <MudProgressCircular Indeterminate="true"></MudProgressCircular>
+}
+
+
+
+@code {
+    private List<Cadet> cadets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cadets = await httpClient.GetFromJsonAsync<List<Cadet>>("api/cadets/all");
+    }
+
+    private async Task AddCadet()
+    {
+        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Добавление нового кадета");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PostAsJsonAsync<Cadet>("api/cadets/add", result.Data as Cadet);
+            if (response.IsSuccessStatusCode)
+            {
+                var addedCadet = await response.Content.ReadFromJsonAsync<Cadet>();
+                cadets.Add(addedCadet);
+                Snackbar.Add("Коренной народ успешно добавлен!", Severity.Success);
+            }
+            else
+            {
+                //var r = await response.Content.ReadAsStringAsync();
+                Snackbar.Add("Не могу добавить коренной народ!", Severity.Error);
+            }
+        }
+    }
+
+    private async Task UpdateCadet(Cadet context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Обновить данные о кадете", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PutAsJsonAsync<Cadet>("api/cadets/update", result.Data as Cadet);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedCadet = await response.Content.ReadFromJsonAsync<Cadet>();
+                var index = cadets.IndexOf(context);
+                cadets.Remove(context);
+                cadets.Insert(index, updatedCadet);
+                Snackbar.Add("Информация о кадете успешно обновлена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу обновить информацию о кадете!", Severity.Error);
+            }
+        }
+    }
+
+    private async Task DeleteCadet(Cadet context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<CadetDeleteDialog>("Удалить кадета", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var nationalityToDelete = result.Data as Cadet;
+            var response = await httpClient.DeleteAsync($"api/cadets/delete/{nationalityToDelete.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                cadets.Remove(nationalityToDelete);
+                Snackbar.Add("Информация о кадете успешно удалена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу удалить информацию о кадете!", Severity.Error);
+            }
+        }
+    }
+
+}
