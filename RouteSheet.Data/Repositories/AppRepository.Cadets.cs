@@ -103,8 +103,8 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public IQueryable<Cadet> AllCadets() => _appDbContext.Cadets.AsQueryable();
+        public IQueryable<Cadet> AllCadets() => _appDbContext.Cadets.Include(x =>x.Classroom).AsQueryable();
 
-        public async ValueTask<Cadet> FindCadetById(int id) => await _appDbContext.Cadets.FindAsync(id);    
+        public async ValueTask<Cadet> FindCadetById(int id) => await _appDbContext.Cadets.Include(x => x.Classroom).FirstAsync(x => x.Id ==id);    
     }
 }

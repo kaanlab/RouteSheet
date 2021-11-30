@@ -1,4 +1,4 @@
-﻿using RouteSheet.Shared.ViewModels;
+﻿using RouteSheet.Shared.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,25 +6,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RouteSheet.Shared.Models
+namespace RouteSheet.Shared.ViewModels
 {
-    public class Cadet
+    public class CadetViewModel
     {
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        
+
         //
         [Required]
-        public Classroom Classroom { get; set; }
+        public ClassroomViewModel Classroom { get; set; }
 
-        public IEnumerable<Lesson>? Lessons { get; set; }
-
-        public CadetViewModel ToCadetViewModel() => new CadetViewModel
+        public Cadet ToCadetModel() => new Cadet
         {
             Id = Id,
             Name = Name,
-            Classroom = Classroom.ToClassroomViewModel()
+            Classroom = Classroom.ToClassroomModel()
+
         };
     }
 }

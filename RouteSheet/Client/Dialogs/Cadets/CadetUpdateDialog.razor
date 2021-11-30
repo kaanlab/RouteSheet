@@ -12,25 +12,26 @@
         <br />
         <div>
             <MudText Typo="Typo.h5">Класс</MudText><br />
-            <MudSelect @bind-Value="Context.Classroom.Id">
+            <MudSelect @bind-Value="SelectedValue" >
                 @if (classrooms is null)
                 {
-                    <MudSelectItem Value="0">--- Выберете класс ---</MudSelectItem>
+
                 }
                 else
                 {
                     @foreach (var item in classrooms)
                     {
-                        <MudSelectItem Value="@item.Id">@item.Name</MudSelectItem>
+                        <MudSelectItem Value="@item.Name">@item.Name</MudSelectItem>
                     }
                 }
-            </MudSelect><br />
+            </MudSelect>
+            <br />
         </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Отмена</MudButton>
 
-        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdateCadet">Сохранить</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="UpdateCadet">Сохранить</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -38,16 +39,25 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public Cadet Context { get; set; } = new Cadet();
+    [Parameter] public CadetViewModel Context { get; set; }
 
-    List<Classroom> classrooms;
+    List<ClassroomViewModel> classrooms;
+
+    string SelectedValue { get; set; }
+    int id;
 
     protected override async Task OnInitializedAsync()
     {
-        classrooms = await httpClient.GetFromJsonAsync<List<Classroom>>("api/classrooms/all");
+        classrooms = await httpClient.GetFromJsonAsync<List<ClassroomViewModel>>("api/classrooms/all");
+        SelectedValue = Context.Classroom.Name;
+        //id = classrooms.First(x => x.Id == Context.Classroom.Id);
     }
 
-    public void AddOrUpdateCadet() => MudDialog.Close(DialogResult.Ok(Context));
+    public void UpdateCadet()
+    {
+        Context.Classroom = classrooms.First(x => x.Name == SelectedValue); 
+        MudDialog.Close(DialogResult.Ok(Context));
+    }
 
     private void Cancel() => MudDialog.Cancel();
 }

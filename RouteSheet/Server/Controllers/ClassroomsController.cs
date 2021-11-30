@@ -17,10 +17,14 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<Classroom>> GetClassrooms() =>
-            _appRepository.AllClassrooms() is IQueryable<Classroom> classrooms
-            ? Ok(classrooms.ToList())
-            : NotFound();
+        public ActionResult<IList<Classroom>> GetClassrooms()
+        {
+            var classroom = _appRepository.AllClassrooms();
+            var classsroomViewModels = classroom.Select(x => x.ToClassroomViewModel());
+
+            return Ok(classsroomViewModels.ToList());
+        }
+
 
 
         [HttpPost("add")]

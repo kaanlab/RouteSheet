@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RouteSheet.Data.Exceptions;
 using RouteSheet.Data.Repositories;
 using RouteSheet.Shared.Models;
+using RouteSheet.Shared.ViewModels;
 
 namespace RouteSheet.Server.Controllers
 {
@@ -17,19 +18,22 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<Cadet>> GetCadets() =>
-            _appRepository.AllCadets() is IQueryable<Cadet> cadets
-            ? Ok(cadets.ToList())
-            : NotFound();
-
+        public ActionResult<IList<CadetViewModel>> GetCadets()
+        {
+            var cadets = _appRepository.AllCadets();
+            var cadetsViewModels = cadets.Select(x => x.ToCadetViewModel());
+            
+            return Ok(cadetsViewModels.ToList());
+        }
 
         [HttpPost("add")]
-        public async Task<ActionResult<Cadet>> Add(Cadet cadet)
+        public async Task<ActionResult<CadetViewModel>> Add(CadetViewModel cadetViewModel)
         {
             try
             {
+                var cadet = cadetViewModel.ToCadetModel();
                 var createdCadet = await _appRepository.AddCadet(cadet);
-                return Ok(createdCadet);
+                return Ok(createdCadet.ToCadetViewModel());
             }
             catch (AppRepositoryException ex)
             {
@@ -38,16 +42,17 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<ActionResult<Cadet>> Update(Cadet cadet)
+        public async Task<ActionResult<CadetViewModel>> Update(CadetViewModel cadetViewModel)
         {
             try
             {
+                var cadet = cadetViewModel.ToCadetModel();
                 var cadetToUpdate = await _appRepository.FindCadetById(cadet.Id);
                 if (cadetToUpdate is null)
                     return Problem(title: "Api layer problems, see details for more info", detail: $"Can't update! Wrong id {cadet.Id}");
 
                 var updatedCadet = await _appRepository.UpdateCadet(cadet);
-                return Ok(updatedCadet);
+                return Ok(updatedCadet.ToCadetViewModel());
             }
             catch (AppRepositoryException ex)
             {

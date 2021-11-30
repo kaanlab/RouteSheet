@@ -6,6 +6,7 @@ using Moq;
 using RouteSheet.Data.Repositories;
 using RouteSheet.Server.Controllers;
 using RouteSheet.Shared.Models;
+using RouteSheet.Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,12 +77,13 @@ namespace RouteSheet.Server.Tests
             var controller = new CadetsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Add(newCadet);
+            var cadetViewModel = newCadet.ToCadetViewModel();
+            var cut = await controller.Add(cadetViewModel);
             var result = cut.Result as OkObjectResult;
-            var value = result.Value as Cadet;
+            var value = result.Value as CadetViewModel;
 
             result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Cadet>();
+            value.Should().BeOfType<CadetViewModel>();
             value.Id.Should().Be(testCadet.Id);
         }
 

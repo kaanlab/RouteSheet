@@ -1,4 +1,6 @@
-﻿@inject HttpClient httpClient
+﻿@using System.Text.Json
+
+@inject HttpClient httpClient
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
@@ -31,46 +33,46 @@ else
 
 
 @code {
-    private List<Cadet> cadets;
+    private List<CadetViewModel> cadets;
 
     protected override async Task OnInitializedAsync()
     {
-        cadets = await httpClient.GetFromJsonAsync<List<Cadet>>("api/cadets/all");
+        cadets = await httpClient.GetFromJsonAsync<List<CadetViewModel>>("api/cadets/all");
     }
 
     private async Task AddCadet()
     {
-        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Добавление нового кадета");
+        var dialog = DialogService.Show<CadetAddDialog>("Добавление нового кадета");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await httpClient.PostAsJsonAsync<Cadet>("api/cadets/add", result.Data as Cadet);
+            var response = await httpClient.PostAsJsonAsync<CadetViewModel>("api/cadets/add", result.Data as CadetViewModel);
             if (response.IsSuccessStatusCode)
             {
-                var addedCadet = await response.Content.ReadFromJsonAsync<Cadet>();
+                var addedCadet = await response.Content.ReadFromJsonAsync<CadetViewModel>();
                 cadets.Add(addedCadet);
-                Snackbar.Add("Коренной народ успешно добавлен!", Severity.Success);
+                Snackbar.Add("Кадет успешно добавлен!", Severity.Success);
             }
             else
             {
-                //var r = await response.Content.ReadAsStringAsync();
-                Snackbar.Add("Не могу добавить коренной народ!", Severity.Error);
+                var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                Snackbar.Add($"Не могу добавить кадета! {problem.Title}", Severity.Error);
             }
         }
     }
 
-    private async Task UpdateCadet(Cadet context)
+    private async Task UpdateCadet(CadetViewModel context)
     {
         var parameters = new DialogParameters { ["context"] = context };
 
-        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Обновить данные о кадете", parameters);
+        var dialog = DialogService.Show<CadetUpdateDialog>("Обновить данные о кадете", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await httpClient.PutAsJsonAsync<Cadet>("api/cadets/update", result.Data as Cadet);
+            var response = await httpClient.PutAsJsonAsync<CadetViewModel>("api/cadets/update", result.Data as CadetViewModel);
             if (response.IsSuccessStatusCode)
             {
-                var updatedCadet = await response.Content.ReadFromJsonAsync<Cadet>();
+                var updatedCadet = await response.Content.ReadFromJsonAsync<CadetViewModel>();
                 var index = cadets.IndexOf(context);
                 cadets.Remove(context);
                 cadets.Insert(index, updatedCadet);
@@ -83,7 +85,7 @@ else
         }
     }
 
-    private async Task DeleteCadet(Cadet context)
+    private async Task DeleteCadet(CadetViewModel context)
     {
         var parameters = new DialogParameters { ["context"] = context };
 
@@ -91,7 +93,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var nationalityToDelete = result.Data as Cadet;
+            var nationalityToDelete = result.Data as CadetViewModel;
             var response = await httpClient.DeleteAsync($"api/cadets/delete/{nationalityToDelete.Id}");
             if (response.IsSuccessStatusCode)
             {
