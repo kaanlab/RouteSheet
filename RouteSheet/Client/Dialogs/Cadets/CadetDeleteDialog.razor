@@ -1,5 +1,20 @@
-﻿<h3>CadetDeleteDialog</h3>
+﻿<MudDialog>
+    <DialogContent>
+        <MudText>@Context.Name</MudText>
+        <MudText>@Context.Classroom.Name</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="Delete">Удалить</MudButton>
+    </DialogActions>
+</MudDialog>
 
-@code {
+@code { 
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    [Parameter] public CadetViewModel Context { get; set; }
+
+    void Delete() => MudDialog.Close(DialogResult.Ok(Context));
+    void Cancel() => MudDialog.Cancel(); 
 }

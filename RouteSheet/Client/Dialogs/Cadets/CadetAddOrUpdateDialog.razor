@@ -7,15 +7,16 @@
             @MudDialog.Title
         </MudText>
     </TitleContent>
+   
     <DialogContent>
-        <MudTextField T="string" Label="Ф.И.О." @bind-Text="Context.Name" />
+        <MudForm Model="@Context" @ref="@form">
+        <MudTextField Label="Ф.И.О." @bind-Value="Context.Name" Validation="@(cadetValidator.ValidateValue)" For="@(() => Context.Name)" />
         <br />
         <div>
-            <MudText Typo="Typo.h5">Класс</MudText><br />
-            <MudSelect @bind-Value="SelectedValue" >
+            <MudSelect Label="Выберите класс" @bind-Value="Context.Classroom.Name" Validation="@(cadetValidator.ValidateValue)" For="@(() => Context.Classroom.Name)">
                 @if (classrooms is null)
                 {
-
+                    <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true"/>
                 }
                 else
                 {
@@ -27,7 +28,9 @@
             </MudSelect>
             <br />
         </div>
+        </MudForm>
     </DialogContent>
+ 
     <DialogActions>
         <MudButton OnClick="Cancel">Отмена</MudButton>
 
@@ -39,24 +42,27 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public CadetViewModel Context { get; set; }
+    [Parameter] public CadetViewModel Context { get; set; } = new CadetViewModel() { Classroom = new ClassroomViewModel() };
 
     List<ClassroomViewModel> classrooms;
 
-    string SelectedValue { get; set; }
-    int id;
+    MudForm form;
+
+    CadetValidator cadetValidator = new CadetValidator();
 
     protected override async Task OnInitializedAsync()
     {
         classrooms = await httpClient.GetFromJsonAsync<List<ClassroomViewModel>>("api/classrooms/all");
-        SelectedValue = Context.Classroom.Name;
-        //id = classrooms.First(x => x.Id == Context.Classroom.Id);
     }
 
-    public void UpdateCadet()
+    private async Task UpdateCadet()
     {
-        Context.Classroom = classrooms.First(x => x.Name == SelectedValue); 
-        MudDialog.Close(DialogResult.Ok(Context));
+        await form.Validate();
+        if(form.IsValid)
+        {
+           Context.Classroom = classrooms.First(x => x.Name == Context.Classroom.Name);
+           MudDialog.Close(DialogResult.Ok(Context));
+        }
     }
 
     private void Cancel() => MudDialog.Cancel();

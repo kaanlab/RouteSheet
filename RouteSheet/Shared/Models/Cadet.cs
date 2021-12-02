@@ -14,9 +14,8 @@ namespace RouteSheet.Shared.Models
         [Required]
         public string Name { get; set; }
         
-        //
-        [Required]
-        public Classroom Classroom { get; set; }
+
+        public Classroom? Classroom { get; set; }
 
         public IEnumerable<Lesson>? Lessons { get; set; }
 
@@ -24,7 +23,7 @@ namespace RouteSheet.Shared.Models
         {
             Id = Id,
             Name = Name,
-            Classroom = Classroom.ToClassroomViewModel()
+            Classroom = Classroom is null ? new ClassroomViewModel() : Classroom.ToClassroomViewModel()
         };
     }
 }

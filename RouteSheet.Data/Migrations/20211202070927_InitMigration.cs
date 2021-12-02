@@ -176,7 +176,7 @@ namespace RouteSheet.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClassroomId = table.Column<int>(type: "int", nullable: false)
+                    ClassroomId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -185,8 +185,7 @@ namespace RouteSheet.Data.Migrations
                         name: "FK_Cadets_Classrooms_ClassroomId",
                         column: x => x.ClassroomId,
                         principalTable: "Classrooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

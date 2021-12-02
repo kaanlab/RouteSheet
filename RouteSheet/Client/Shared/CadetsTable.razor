@@ -42,7 +42,7 @@ else
 
     private async Task AddCadet()
     {
-        var dialog = DialogService.Show<CadetAddDialog>("Добавление нового кадета");
+        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Добавление нового кадета");
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -65,7 +65,7 @@ else
     {
         var parameters = new DialogParameters { ["context"] = context };
 
-        var dialog = DialogService.Show<CadetUpdateDialog>("Обновить данные о кадете", parameters);
+        var dialog = DialogService.Show<CadetAddOrUpdateDialog>("Обновить данные о кадете", parameters);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
@@ -93,11 +93,11 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var nationalityToDelete = result.Data as CadetViewModel;
-            var response = await httpClient.DeleteAsync($"api/cadets/delete/{nationalityToDelete.Id}");
+            var cadetToDelete = result.Data as CadetViewModel;
+            var response = await httpClient.DeleteAsync($"api/cadets/delete/{cadetToDelete.Id}");
             if (response.IsSuccessStatusCode)
             {
-                cadets.Remove(nationalityToDelete);
+                cadets.Remove(cadetToDelete);
                 Snackbar.Add("Информация о кадете успешно удалена!", Severity.Success);
             }
             else

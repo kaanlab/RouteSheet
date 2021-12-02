@@ -57,7 +57,7 @@ namespace RouteSheet.Data.Repositories
                 var cadetInDb = await this.FindCadetById(cadet.Id); 
                 cadetInDb.Name = cadet.Name;
 
-                if (cadetInDb.Classroom is not null && cadet.Classroom.Id > 0)
+                if (cadet.Classroom is not null)
                 {
                     var classroom = await this.FindClassroomById(cadet.Classroom.Id);
                     if (classroom is null)

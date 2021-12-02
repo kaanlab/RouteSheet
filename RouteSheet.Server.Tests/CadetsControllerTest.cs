@@ -109,12 +109,13 @@ namespace RouteSheet.Server.Tests
             var controller = new CadetsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Update(updatedCadet);
+            var updatedCadetVM = updatedCadet.ToCadetViewModel();
+            var cut = await controller.Update(updatedCadetVM);
             var result = cut.Result as OkObjectResult;
             var value = result.Value as Cadet;
 
             result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Cadet>();
+            value.Should().BeOfType<CadetViewModel>();
             value.Name.Should().Be("Иванов И.И.");
         }
 
@@ -131,7 +132,8 @@ namespace RouteSheet.Server.Tests
             var controller = new CadetsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Update(testCadet);
+            var testCadetVM = testCadet.ToCadetViewModel();
+            var cut = await controller.Update(testCadetVM);
             var result = cut.Result as ObjectResult;
             var value = result.Value as ProblemDetails;
 

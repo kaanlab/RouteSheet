@@ -31,11 +31,11 @@ else
 
 
 @code {
-    private List<Classroom> classrooms;
+    private List<ClassroomViewModel> classrooms;
 
     protected override async Task OnInitializedAsync()
     {
-        classrooms = await httpClient.GetFromJsonAsync<List<Classroom>>("api/classrooms/all");
+        classrooms = await httpClient.GetFromJsonAsync<List<ClassroomViewModel>>("api/classrooms/all");
     }
 
     private async Task AddClassroom()
@@ -44,10 +44,10 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await httpClient.PostAsJsonAsync<Classroom>("api/classrooms/add", result.Data as Classroom);
+            var response = await httpClient.PostAsJsonAsync<ClassroomViewModel>("api/classrooms/add", result.Data as ClassroomViewModel);
             if (response.IsSuccessStatusCode)
             {
-                var addedClassroom = await response.Content.ReadFromJsonAsync<Classroom>();
+                var addedClassroom = await response.Content.ReadFromJsonAsync<ClassroomViewModel>();
                 classrooms.Add(addedClassroom);
                 Snackbar.Add("Класс успешно добавлен!", Severity.Success);
             }
@@ -59,7 +59,7 @@ else
         }
     }
 
-    private async Task UpdateClassroom(Classroom context)
+    private async Task UpdateClassroom(ClassroomViewModel context)
     {
         var parameters = new DialogParameters { ["context"] = context };
 
@@ -67,10 +67,10 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await httpClient.PutAsJsonAsync<Classroom>("api/classrooms/update", result.Data as Classroom);
+            var response = await httpClient.PutAsJsonAsync<ClassroomViewModel>("api/classrooms/update", result.Data as ClassroomViewModel);
             if (response.IsSuccessStatusCode)
             {
-                var updatedClassroom = await response.Content.ReadFromJsonAsync<Classroom>();
+                var updatedClassroom = await response.Content.ReadFromJsonAsync<ClassroomViewModel>();
                 var index = classrooms.IndexOf(context);
                 classrooms.Remove(context);
                 classrooms.Insert(index, updatedClassroom);
@@ -83,7 +83,7 @@ else
         }
     }
 
-    private async Task DeleteClassroom(Classroom context)
+    private async Task DeleteClassroom(ClassroomViewModel context)
     {
         var parameters = new DialogParameters { ["context"] = context };
 
@@ -91,7 +91,7 @@ else
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var classroomToDelete = result.Data as Classroom;
+            var classroomToDelete = result.Data as ClassroomViewModel;
             var response = await httpClient.DeleteAsync($"api/classrooms/delete/{classroomToDelete.Id}");
             if (response.IsSuccessStatusCode)
             {

@@ -19,7 +19,7 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public Classroom Context { get; set; } = new Classroom();
+    [Parameter] public ClassroomViewModel Context { get; set; } = new ClassroomViewModel();
 
     public void AddOrUpdateClassroom() => MudDialog.Close(DialogResult.Ok(Context));
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RouteSheet.Data.Exceptions;
 using RouteSheet.Data.Repositories;
 using RouteSheet.Shared.Models;
+using RouteSheet.Shared.ViewModels;
 
 namespace RouteSheet.Server.Controllers
 {
@@ -17,7 +18,7 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<Classroom>> GetClassrooms()
+        public ActionResult<IList<ClassroomViewModel>> GetClassrooms()
         {
             var classroom = _appRepository.AllClassrooms();
             var classsroomViewModels = classroom.Select(x => x.ToClassroomViewModel());
@@ -28,12 +29,13 @@ namespace RouteSheet.Server.Controllers
 
 
         [HttpPost("add")]
-        public async Task<ActionResult<Classroom>> Add(Classroom classroom)
+        public async Task<ActionResult<ClassroomViewModel>> Add(ClassroomViewModel classroomViweModel)
         {
             try
             {
+                var classroom = classroomViweModel.ToClassroomModel();
                 var createdClassroom = await _appRepository.AddClassroom(classroom);
-                return Ok(createdClassroom);
+                return Ok(createdClassroom.ToClassroomViewModel());
             }
             catch (AppRepositoryException ex)
             {
@@ -42,16 +44,17 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<ActionResult<Classroom>> Update(Classroom classroom)
+        public async Task<ActionResult<ClassroomViewModel>> Update(ClassroomViewModel classroomViewModel)
         {
             try
             {
+                var classroom = classroomViewModel.ToClassroomModel();
                 var classroomToUpdate = await _appRepository.FindClassroomById(classroom.Id);
                 if (classroomToUpdate is null)
                     return Problem(title: "Api layer problems, see details for more info", detail: $"Can't update! Wrong id {classroom.Id}");
 
                 var updatedClassroom = await _appRepository.UpdateClassroom(classroom);
-                return Ok(updatedClassroom);
+                return Ok(updatedClassroom.ToClassroomViewModel());
             }
             catch (AppRepositoryException ex)
             {

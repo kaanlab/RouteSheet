@@ -6,6 +6,7 @@ using Moq;
 using RouteSheet.Data.Repositories;
 using RouteSheet.Server.Controllers;
 using RouteSheet.Shared.Models;
+using RouteSheet.Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,12 +73,13 @@ namespace RouteSheet.Server.Tests
             var controller = new ClassroomsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Add(newClassroom);
+            var newClassroomVM = newClassroom.ToClassroomViewModel();
+            var cut = await controller.Add(newClassroomVM);
             var result = cut.Result as OkObjectResult;
             var value = result.Value as Classroom;
 
             result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Classroom>();
+            value.Should().BeOfType<ClassroomViewModel>();
             value.Id.Should().Be(testClassroom.Id);
         }
 
@@ -101,12 +103,13 @@ namespace RouteSheet.Server.Tests
             var controller = new ClassroomsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Update(updatedClassroom);
+            var updatedClassroomVM = updatedClassroom.ToClassroomViewModel();
+            var cut = await controller.Update(updatedClassroomVM);
             var result = cut.Result as OkObjectResult;
-            var value = result.Value as Classroom;
+            var value = result.Value as ClassroomViewModel;
 
             result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Classroom>();
+            value.Should().BeOfType<ClassroomViewModel>();
             value.Name.Should().Be("9Г");
         }
 
@@ -122,7 +125,8 @@ namespace RouteSheet.Server.Tests
             var controller = new ClassroomsController(mockRepo.Object);
 
             // Act
-            var cut = await controller.Update(testClassroom);
+            var testClassroomVM = testClassroom.ToClassroomViewModel();
+            var cut = await controller.Update(testClassroomVM);
             var result = cut.Result as ObjectResult;
             var value = result.Value as ProblemDetails;
 

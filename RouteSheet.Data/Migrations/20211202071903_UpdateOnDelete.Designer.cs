@@ -12,8 +12,8 @@ using RouteSheet.Data;
 namespace RouteSheet.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211129144841_InitMigration")]
-    partial class InitMigration
+    [Migration("20211202071903_UpdateOnDelete")]
+    partial class UpdateOnDelete
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -238,7 +238,7 @@ namespace RouteSheet.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("ClassroomId")
+                    b.Property<int?>("ClassroomId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -363,8 +363,7 @@ namespace RouteSheet.Data.Migrations
                     b.HasOne("RouteSheet.Shared.Models.Classroom", "Classroom")
                         .WithMany("Cadets")
                         .HasForeignKey("ClassroomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Classroom");
                 });
