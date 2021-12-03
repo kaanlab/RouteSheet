@@ -1,6 +1,12 @@
 ﻿@page "/admin"
 <h3>Admin</h3>
 
-<ClassroomsTable />
-<CadetsTable />
+<MudGrid>
+    <MudItem xs="12">
+        <ClassroomsTable />
+    </MudItem>
+    <MudItem xs="12">
+        <CadetsTable />
+    </MudItem>
+</MudGrid>
 

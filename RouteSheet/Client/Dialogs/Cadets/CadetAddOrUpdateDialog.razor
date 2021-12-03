@@ -1,19 +1,19 @@
 ﻿@inject HttpClient httpClient
+@inject CadetValidator validator
 
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6" Color="Color.Info">
-            <MudIcon Icon="@Icons.Material.Filled.Update" Title="Add" />
+            <MudIcon Icon="@Icons.Material.Filled.Face" Title="@MudDialog.Title" />
             @MudDialog.Title
         </MudText>
-    </TitleContent>
-   
+    </TitleContent>   
     <DialogContent>
         <MudForm Model="@Context" @ref="@form">
-        <MudTextField Label="Ф.И.О." @bind-Value="Context.Name" Validation="@(cadetValidator.ValidateValue)" For="@(() => Context.Name)" />
+        <MudTextField Label="Ф.И.О." @bind-Value="Context.Name" Validation="@(validator.ValidateValue)" For="@(() => Context.Name)" />
         <br />
         <div>
-            <MudSelect Label="Выберите класс" @bind-Value="Context.Classroom.Name" Validation="@(cadetValidator.ValidateValue)" For="@(() => Context.Classroom.Name)">
+            <MudSelect Label="Выберите класс" @bind-Value="Context.Classroom.Name" Validation="@(validator.ValidateValue)" For="@(() => Context.Classroom.Name)">
                 @if (classrooms is null)
                 {
                     <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true"/>
@@ -29,12 +29,11 @@
             <br />
         </div>
         </MudForm>
-    </DialogContent>
- 
+    </DialogContent> 
     <DialogActions>
         <MudButton OnClick="Cancel">Отмена</MudButton>
 
-        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="UpdateCadet">Сохранить</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdate">Сохранить</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -48,14 +47,12 @@
 
     MudForm form;
 
-    CadetValidator cadetValidator = new CadetValidator();
-
     protected override async Task OnInitializedAsync()
     {
         classrooms = await httpClient.GetFromJsonAsync<List<ClassroomViewModel>>("api/classrooms/all");
     }
 
-    private async Task UpdateCadet()
+    private async Task AddOrUpdate()
     {
         await form.Validate();
         if(form.IsValid)

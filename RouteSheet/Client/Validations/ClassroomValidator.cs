@@ -7,7 +7,7 @@ namespace RouteSheet.Client.Validations
     {
         public ClassroomValidator()
         {
-            RuleFor(c => c.Name).NotEmpty();
+            RuleFor(c => c.Name).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>

@@ -7,8 +7,8 @@ namespace RouteSheet.Client.Validations
     {
         public CadetValidator()
         {
-            RuleFor(c => c.Name).NotEmpty().WithMessage("Поле Ф.И.О. обязательно для заполнения!");
-            RuleFor(c => c.Classroom.Name).NotEmpty().WithMessage("Поле класс обязательно для заполнения!");
+            RuleFor(c => c.Name).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
+            RuleFor(c => c.Classroom.Name).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
