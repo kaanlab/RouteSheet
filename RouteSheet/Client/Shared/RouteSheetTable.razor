@@ -1,0 +1,111 @@
+﻿@inject HttpClient httpClient
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<CascadingValue Value="this">
+    <LessonTable />
+</CascadingValue>
+
+@code {
+
+    public List<Lesson> lessons = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        lessons = await httpClient.GetFromJsonAsync<List<Lesson>>("api/lessons/all");
+    }
+
+    public async Task AddLesson()
+    {
+        var dialog = DialogService.Show<LessonAddOrUpdateDialog>("Добавить занятие");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PostAsJsonAsync<Lesson>("api/lessons/add", result.Data as Lesson);
+            if (response.IsSuccessStatusCode)
+            {
+                var addedLesson = await response.Content.ReadFromJsonAsync<Lesson>();
+                lessons.Add(addedLesson);
+                Snackbar.Add("Занятие успешно добавлено!", Severity.Success);
+            }
+            else
+            {
+                var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                Snackbar.Add($"Не могу добавить занятие! {problem.Title}", Severity.Error);
+            }
+        }
+        StateHasChanged();
+    }
+
+    public async Task AddMedLesson()
+    {
+        var dialog = DialogService.Show<MedLessonAddOrUpdateDialog>("Добавить запись медпункта");
+        var result = await dialog.Result;
+
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PostAsJsonAsync<Lesson>("api/lessons/add", result.Data as Lesson);
+            if (response.IsSuccessStatusCode)
+            {
+                var addedLesson = await response.Content.ReadFromJsonAsync<Lesson>();
+                lessons.Add(addedLesson);
+                Snackbar.Add("Запись медпункта успешно добавлена!", Severity.Success);
+            }
+            else
+            {
+                var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                Snackbar.Add($"Не могу добавить запись медпункта! {problem.Title}", Severity.Error);
+            }
+        }
+        StateHasChanged();
+    }
+
+    public async Task UpdateLesson(Lesson context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<LessonAddOrUpdateDialog>("Обновить занятие", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PutAsJsonAsync<Lesson>("api/lessons/update", result.Data as Lesson);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedLesson = await response.Content.ReadFromJsonAsync<Lesson>();
+                var index = lessons.IndexOf(context);
+                lessons.Remove(context);
+                lessons.Insert(index, updatedLesson);
+                Snackbar.Add("Информация о занятии успешно обновлена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу обновить информацию о занятии!", Severity.Error);
+            }
+        }
+        StateHasChanged();
+    }
+
+    public async Task DeleteLesson(Lesson context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<LessonDeleteDialog>("Удалить занятие", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var lessonToDelete = result.Data as Lesson;
+            var response = await httpClient.DeleteAsync($"api/lessons/delete/{lessonToDelete.Id}");
+            if (response.IsSuccessStatusCode)
+            {
+                lessons.Remove(lessonToDelete);
+                Snackbar.Add("Информация о занятии успешно удалена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу удалить информацию о занятии!", Severity.Error);
+            }
+        }
+        StateHasChanged();
+    }
+}
+

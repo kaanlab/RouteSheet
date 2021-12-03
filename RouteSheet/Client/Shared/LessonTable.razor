@@ -1,0 +1,90 @@
+﻿
+<table class="table" border="1">
+    <tr>
+        <td colspan="6" class="date">на период с @monday.ToString("dd.MM") по @sunday.ToString("dd.MM") @monday.ToString("yyyy")г.</td>
+    </tr>
+    <tr>
+        <td rowspan="2">День недели</td>
+        <td colspan="4">СП, ДО, ВНУ, индивидуальные занятия</td>
+        <td rowspan="2">Медицинский пункт</td>
+    </tr>
+    <tr>
+        <td>1 час</td>
+        <td>2 час</td>
+        <td>3 час</td>
+        <td>4 час</td>
+    </tr>
+
+
+    @for (int date = 0; date < 6; date++)
+    {
+        <tr>
+            <td>@daysOfWeek[date]</td>
+        
+            @for (int hour = 1; hour <= 5; hour++)
+            {
+                <LessonTd CurrentDate="date" CurrentHour="hour" FirsDayOfWeek="monday" />
+            }
+        </tr>
+    }
+    <tr>
+        <td>Примечание</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+<div align="center" style="margin-top: 10px;">
+    <MudButton Variant="Variant.Outlined" OnClick="prevWeek">&larr;</MudButton>
+    <MudButton Variant="Variant.Outlined" OnClick="nextWeek">&rarr;</MudButton>
+</div>
+
+<div class="d-flex flex-wrap" style="margin-top: 20px;">
+    <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnLessonAdd" Style="margin: 10px;">Добавить занятие</MudButton>
+    <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnMedLessonAdd" Style="margin: 10px;">Добавить занятие</MudButton>
+</div>
+
+@code { 
+
+    DateTime currentDate = DateTime.Now;
+    DateTime monday;
+    DateTime sunday;
+    static string[] daysOfWeek = new[] { "Пн", "Вт", "Ср", "Чт", "Пт", "Сб" };
+
+    [CascadingParameter]
+    RouteSheetTable RouteSheetTable { get; set; }
+
+
+    private async Task OnLessonAdd()
+    {
+        await RouteSheetTable.AddLesson();
+    }
+
+    private async Task OnMedLessonAdd()
+    {
+        await RouteSheetTable.AddMedLesson();
+    }
+
+    protected override void OnInitialized()
+    {
+        monday = currentDate.StartOfWeek(DayOfWeek.Monday);
+        sunday = monday.AddDays(6);
+    }
+
+
+    void prevWeek()
+    {
+        monday = monday.AddDays(-7);
+        sunday = sunday.AddDays(-7);
+    }
+
+    void nextWeek()
+    {
+        monday = monday.AddDays(7);
+        sunday = sunday.AddDays(7);
+    }
+
+}

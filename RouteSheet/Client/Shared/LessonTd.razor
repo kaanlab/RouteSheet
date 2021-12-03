@@ -1,0 +1,66 @@
+﻿@if (lessons.Count() > 0)
+{
+    <td>
+        @foreach (var lesson in lessons)
+        {
+          <div class="left">
+            <i>
+                @lesson.AppUser.DisplayName
+            </i>
+            <br />
+            @lesson.Title
+          </div>
+          <div class="right">
+            <MudText Typo="Typo.caption">
+                <MudIcon Icon="@Icons.Material.Filled.Edit" @onclick="@((e) => OnUpdateLesson(lesson))" Color="Color.Info" Class="icon"></MudIcon>
+                <br />
+                <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="@((e) => OnDeleteLesson(lesson))" Color="Color.Error" Class="icon"></MudIcon>
+            </MudText>
+         </div>
+        }
+    </td> 
+}
+else
+{
+  <td></td>
+}
+
+
+@code {
+
+    [CascadingParameter]
+    RouteSheetTable RouteSheetTable { get; set; }
+
+    [Parameter]
+    public DateTime FirsDayOfWeek { get; set; }
+
+    [Parameter]
+    public int CurrentDate { get; set; }
+
+    [Parameter]
+    public int CurrentHour { get; set; }
+
+    List<Lesson> lessons;
+
+    protected override void OnParametersSet()
+    {
+        lessons = GetLessons();
+    }
+
+    private async Task OnDeleteLesson(Lesson context)
+    {
+        await RouteSheetTable.DeleteLesson(context);
+    }
+
+    private async Task OnUpdateLesson(Lesson context)
+    {
+        await RouteSheetTable.UpdateLesson(context);
+    }
+
+    private List<Lesson> GetLessons() =>
+        RouteSheetTable.lessons
+                .Where(d => ((int)d.Date.Value.DayOfWeek == (CurrentDate + 1) && d.Hour == CurrentHour && d.Date.Value.DayOfYear == FirsDayOfWeek.AddDays(CurrentDate).DayOfYear))
+                .OrderBy(l => l.Prioriy)
+                .ToList();
+
+}

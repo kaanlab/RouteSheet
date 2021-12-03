@@ -14,7 +14,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Отменить</MudButton>
-        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="DeleteLesson">Удалить</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="Delete">Удалить</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -24,7 +24,7 @@
 
     [Parameter] public Lesson Context { get; set; }
 
-    void DeleteLesson() => MudDialog.Close(DialogResult.Ok(Context));
+    void Delete() => MudDialog.Close(DialogResult.Ok(Context));
 
     void Cancel() => MudDialog.Cancel();
 }

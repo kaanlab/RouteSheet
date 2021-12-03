@@ -9,7 +9,6 @@
         <MudDatePicker Label="Дата занятия" @bind-Date="Context.Date" Orientation="Orientation.Landscape" DisableToolbar="true"/>
         <MudNumericField @bind-Value="Context.Hour" Label="Час занятия" Variant="Variant.Text" Min="1" Max="4" />
         <MudTextField T="string" Label="Название" @bind-Text="Context.Title" />
-        <MudTextField T="string" Label="Имя преподавателя" @bind-Text="Context.AppUser.DisplayName" />
         <br />
         <div>
             <MudText Typo="Typo.h5">Приоритет</MudText><br />
@@ -25,7 +24,7 @@
     <DialogActions>
         <MudButton OnClick="Cancel">Отмена</MudButton>
         
-        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdateLesson">Обновить</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdate">Обновить</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -35,7 +34,12 @@
 
     [Parameter] public Lesson Context { get; set; } = new Lesson();
 
-    public void AddOrUpdateLesson() => MudDialog.Close(DialogResult.Ok(Context));
+    public void AddOrUpdate()
+    {
+        //Add AppUser!!!
+
+        MudDialog.Close(DialogResult.Ok(Context));
+    }
 
     private void Cancel() => MudDialog.Cancel();
 
