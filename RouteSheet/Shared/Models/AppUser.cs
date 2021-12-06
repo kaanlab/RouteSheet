@@ -9,27 +9,17 @@ using System.Threading.Tasks;
 
 namespace RouteSheet.Shared.Models
 {
-    public enum AppUserType
-    {
-        [Display(Name ="Учитель")]
-        Teacher,
-        [Display(Name ="Медик")]
-        Medic
-    }
-    
     public class AppUser : IdentityUser
     {
-        
-        public AppUserType AppUserType { get; set; }
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
 
         //
         public IEnumerable<Lesson> Lessons { get; set; }
 
         public UserViewModel ToUserViewModel() => new UserViewModel()
         {
-            DisplayName = this.DisplayName,
-            AppUserType = this.AppUserType,
+            Name = this.Name,
             UserName = this.UserName,
             Email = this.Email
         };

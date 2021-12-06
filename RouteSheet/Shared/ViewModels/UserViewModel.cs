@@ -9,15 +9,15 @@ namespace RouteSheet.Shared.ViewModels
 {
     public class UserViewModel
     {
-        public AppUserType AppUserType { get; set; }
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
 
         public AppUser ToAppUser() => new AppUser()
         {
-            DisplayName = this.DisplayName,
-            AppUserType = this.AppUserType,
+            Name = this.Name,
+            Position = this.Position,
             UserName = this.UserName,
             Email = this.Email
         };

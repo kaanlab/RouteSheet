@@ -8,21 +8,22 @@ using System.Threading.Tasks;
 
 namespace RouteSheet.Shared.ViewModels
 {
-    public class AddUserViewModel
+    public class UserAddViewModel
     {
-        public string DisplayName { get; set; }
-        public AppUserType AppUserType { get; set; }
+        public string Name { get; set; }
+        public string Position { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Role { get; set; }
 
-        [Compare("Password")]
+        //[Compare("Password")]
         public string ConfirmPassword { get; set; }
 
         public AppUser ToAppUser() => new AppUser()
         {
-            DisplayName = this.DisplayName,
-            AppUserType = this.AppUserType,
+            Name = this.Name,
+            Position = this.Position,
             UserName = this.UserName,
             Email = this.Email
         };

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RouteSheet.Shared.ViewModels
 {
-    public class ChgPassUserViewModel
+    public class UserChgPassViewModel
     {
-        public string DisplayName { get; set; }
+        public string Name { get; set; }
         public string UserName { get; set; }
         public string CurrentPassword { get; set; }
         public string Password { get; set; }

@@ -1,0 +1,118 @@
+﻿@using System.Text.Json
+
+@inject HttpClient httpClient
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+@if (users is not null)
+{
+    <MudTable Items="@users" Hover="true" Class="my-5">
+        <ToolBarContent>
+            <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="Add" Class="mr-3" />
+            <MudText Typo="Typo.h6">Пользователи</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>должность</MudTh>
+            <MudTh>Логин</MudTh>
+            <MudTh>Почта</MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Класс">@context.Name</MudTd>
+            <MudTd DataLabel="Ф.И.О">@context.UserName</MudTd>
+            <MudTd DataLabel="Класс">@context.Email</MudTd>
+            <MudTd><MudButton Color="Color.Info" @onclick="@((e) => Update(context))">Изменить</MudButton></MudTd>
+            <MudTd><MudButton Color="Color.Warning" @onclick="@((e) => Delete(context))">Сменить пароль</MudButton></MudTd>
+            <MudTd><MudButton Color="Color.Warning" @onclick="@((e) => Delete(context))">Сменить роль</MudButton></MudTd>
+            <MudTd><MudButton Color="Color.Error" @onclick="@((e) => Delete(context))">Удалить</MudButton></MudTd>
+
+        </RowTemplate>
+    </MudTable>
+}
+else
+{
+    <MudAlert Severity="Severity.Warning">Загрузка данных о пользователях...</MudAlert>
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+
+
+
+@code {
+    private List<UserViewModel> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await httpClient.GetFromJsonAsync<List<UserViewModel>>("api/users/all");
+    }
+
+    private async Task Add()
+    {
+        var dialog = DialogService.Show<UserAddDialog>("Добавление нового кадета");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PostAsJsonAsync<UserAddViewModel>("api/users/add", result.Data as UserAddViewModel);
+            if (response.IsSuccessStatusCode)
+            {
+                var addedUser = await response.Content.ReadFromJsonAsync<UserViewModel>();
+                users.Add(addedUser);
+                Snackbar.Add("Пользователь успешно добавлен!", Severity.Success);
+            }
+            else
+            {
+                var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
+                Snackbar.Add($"Не могу добавить кадета! {problem.Title}", Severity.Error);
+            }
+        }
+    }
+
+    private async Task Update(UserViewModel context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<UserUpdateDialog>("Обновить данные о пользователе", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var response = await httpClient.PutAsJsonAsync<UserViewModel>("api/users/update", result.Data as UserViewModel);
+            if (response.IsSuccessStatusCode)
+            {
+                var updatedUser = await response.Content.ReadFromJsonAsync<UserViewModel>();
+                var index = users.IndexOf(context);
+                users.Remove(context);
+                users.Insert(index, updatedUser);
+                Snackbar.Add("Информация о пользователе успешно обновлена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу обновить информацию о пользователе!", Severity.Error);
+            }
+        }
+    }
+
+    private async Task Delete(UserViewModel context)
+    {
+        var parameters = new DialogParameters { ["context"] = context };
+
+        var dialog = DialogService.Show<UserDeleteDialog>("Удалить пользователя", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var userToDelete = result.Data as UserViewModel;
+            var response = await httpClient.DeleteAsync($"api/users/delete/{userToDelete.UserName}");
+            if (response.IsSuccessStatusCode)
+            {
+                users.Remove(userToDelete);
+                Snackbar.Add("Информация о пользователе успешно удалена!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Не могу удалить информацию о пользователе!", Severity.Error);
+            }
+        }
+    }
+
+}

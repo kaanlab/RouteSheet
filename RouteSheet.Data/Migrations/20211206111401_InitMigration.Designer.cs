@@ -12,8 +12,8 @@ using RouteSheet.Data;
 namespace RouteSheet.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211202071903_UpdateOnDelete")]
-    partial class UpdateOnDelete
+    [Migration("20211206111401_InitMigration")]
+    partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -164,10 +164,6 @@ namespace RouteSheet.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
-
-                    b.Property<string>("AppUserType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

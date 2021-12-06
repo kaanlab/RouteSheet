@@ -15,9 +15,7 @@ namespace RouteSheet.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AppUser>().Property(e => e.AppUserType).HasConversion<string>();
             modelBuilder.Entity<Lesson>().Property(e => e.Prioriy).HasConversion<string>();
-
             modelBuilder.Entity<Classroom>().HasMany(e => e.Cadets).WithOne(e => e.Classroom).OnDelete(DeleteBehavior.SetNull);
 
             base.OnModelCreating(modelBuilder);
