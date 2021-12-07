@@ -35,7 +35,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(200);
             result.Value.Should().NotBeNull();
             value.Should().BeOfType<List<Classroom>>();
-            value.Count().Should().Be(5);
+            value.Count.Should().Be(5);
         }
 
         [Fact(DisplayName = "Getting empty list of classroom should return Ok, be typeof<List> and count 0")]
@@ -54,7 +54,7 @@ namespace RouteSheet.Server.Tests
 
             result.StatusCode.Should().Be(200);
             value.Should().BeOfType<List<Classroom>>();
-            value.Count().Should().Be(0);
+            value.Count.Should().Be(0);
         }
 
         [Fact(DisplayName = "Adding new classroom should return created classroom")]
@@ -170,7 +170,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(400);
         }
 
-        private Classroom TestClassroom()
+        private static  Classroom TestClassroom()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
@@ -179,7 +179,7 @@ namespace RouteSheet.Server.Tests
         }
 
 
-        private IQueryable<Classroom> GetTestClassrooms()
+        private static IQueryable<Classroom> GetTestClassrooms()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));

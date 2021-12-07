@@ -31,15 +31,15 @@ namespace RouteSheet.Data
 
             if (!_userManager.Users.Any())
             {
-                var admin = new AppUser { Name = "", Position = "Администратор", UserName = "siteadmin", Email = "petrpku@mil.ru",  };
+                var admin = new AppUser { Name = "Иванов И.И.", Position = "Администратор", UserName = "siteadmin", Email = "petrpku@mil.ru",  };
                 await _userManager.CreateAsync(admin, "1Password!");
                 await _userManager.AddToRoleAsync(admin, GlobalVarables.Roles.ADMIN);
 
-                var teacher = new AppUser { Name = "", Position = "Учитель", UserName = "teacher", Email = "petrpku@mil.ru", };
+                var teacher = new AppUser { Name = "Петров П.П.", Position = "Учитель", UserName = "teacher", Email = "petrpku@mil.ru", };
                 await _userManager.CreateAsync(teacher, "1Password!");
                 await _userManager.AddToRoleAsync(teacher, GlobalVarables.Roles.TEACHER);
 
-                var medic = new AppUser { Name = "", Position = "Медик", UserName = "medic", Email = "petrpku@mil.ru", };
+                var medic = new AppUser { Name = "Сидоров С.С.", Position = "Медик", UserName = "medic", Email = "petrpku@mil.ru", };
                 await _userManager.CreateAsync(medic, "1Password!");
                 await _userManager.AddToRoleAsync(medic, GlobalVarables.Roles.MEDIC);
             }

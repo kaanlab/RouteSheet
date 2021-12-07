@@ -20,6 +20,7 @@ namespace RouteSheet.Shared.Models
         public UserViewModel ToUserViewModel() => new UserViewModel()
         {
             Name = this.Name,
+            Position = this.Position,
             UserName = this.UserName,
             Email = this.Email
         };

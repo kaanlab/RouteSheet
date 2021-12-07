@@ -77,8 +77,8 @@ namespace RouteSheet.Data.Tests
         {
             List<AppUser> appUsers = new List<AppUser>
             {
-                 new AppUser { DisplayName = "Администратор", UserName = "siteadmin", Email = "petrpku@mil.ru" },
-                 new AppUser { DisplayName = "Петрозаводское ПКУ", UserName = "petrpku", Email = "petrpku@mil.ru" }
+                 new AppUser { Position = "Администратор", Name="Петров П.П.",UserName = "siteadmin", Email = "petrpku@mil.ru" },
+                 new AppUser { Position = "Преподаватель", Name="Иванов И.И.", UserName = "petrpku", Email = "petrpku@mil.ru" }
             };
             return appUsers.AsQueryable();
         }

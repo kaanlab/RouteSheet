@@ -36,7 +36,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(200);
             result.Value.Should().NotBeNull();
             value.Should().BeOfType<List<Cadet>>();
-            value.Count().Should().Be(5);
+            value.Count.Should().Be(5);
         }
 
         [Fact(DisplayName = "Getting empty list of cadets should return Ok, be typeof<List> and count 0")]
@@ -56,7 +56,7 @@ namespace RouteSheet.Server.Tests
 
             result.StatusCode.Should().Be(200);
             value.Should().BeOfType<List<Cadet>>();
-            value.Count().Should().Be(0);
+            value.Count.Should().Be(0);
         }
 
         [Fact(DisplayName = "Adding new cadet should return created cadet")]
@@ -179,7 +179,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(400);
         }
 
-        private Cadet TestCadet()
+        private static Cadet TestCadet()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
@@ -187,7 +187,7 @@ namespace RouteSheet.Server.Tests
             return fixture.Create<Cadet>();
         }
 
-        private IQueryable<Cadet> GetTestCadets()
+        private static IQueryable<Cadet> GetTestCadets()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));

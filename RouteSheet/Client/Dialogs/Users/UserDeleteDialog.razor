@@ -1,5 +1,28 @@
-﻿<h3>UserDeleteDialog</h3>
+﻿<MudDialog>
+     <TitleContent>
+        <MudText Typo="Typo.h6" Color="Color.Info">
+            <MudIcon Icon="@Icons.Material.Filled.Face" Title="@MudDialog.Title" />
+            @MudDialog.Title
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText>@Context.Name</MudText>
+        <MudText>@Context.Position</MudText>
+        <MudText>@Context.UserName</MudText>
+        <MudText>@Context.Email</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Filled" OnClick="Delete">Удалить</MudButton>
+    </DialogActions>
+</MudDialog>
 
-@code {
+@code { 
+    
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+    [Parameter] public UserViewModel Context { get; set; }
+
+    void Delete() => MudDialog.Close(DialogResult.Ok(Context));
+    void Cancel() => MudDialog.Cancel(); 
 }

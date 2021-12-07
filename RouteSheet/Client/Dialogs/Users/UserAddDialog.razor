@@ -10,9 +10,10 @@
     </TitleContent>
     <DialogContent>
         <MudForm Model="@Context" @ref="@form">
-            <MudTextField Label="Должность" @bind-Value="Context.Name" Validation="@(validator.ValidateValue)" For="@(() => Context.Name)" />
+            <MudTextField Label="Ф.И.О." @bind-Value="Context.Name" Validation="@(validator.ValidateValue)" For="@(() => Context.Name)" />
+            <MudTextField Label="Должность" @bind-Value="Context.Position" Validation="@(validator.ValidateValue)" For="@(() => Context.Name)" />
             <MudTextField Label="Логин" @bind-Value="Context.UserName" Validation="@(validator.ValidateValue)" For="@(() => Context.UserName)" />
-            <MudTextField Label="Почта" @bind-Value="Context.Email" Validation="@(validator.ValidateValue)" For="@(() => Context.Email)" />            
+            <MudTextField Label="Почта" @bind-Value="Context.Email" Validation="@(validator.ValidateValue)" For="@(() => Context.Email)" />
             <br />
             <div>
                 <MudSelect Label="Выберите роль" @bind-Value="Context.Role" Validation="@(validator.ValidateValue)" For="@(() => Context.Role)">

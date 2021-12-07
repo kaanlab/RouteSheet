@@ -3,23 +3,19 @@ using RouteSheet.Shared.ViewModels;
 
 namespace RouteSheet.Client.Validations
 {
-    public class UserAddValidator : AbstractValidator<UserAddViewModel>
+    public class UserValidator : AbstractValidator<UserViewModel>
     {
-        public UserAddValidator()
+        public UserValidator()
         {
             RuleFor(c => c.Name).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
             RuleFor(c => c.Position).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
             RuleFor(c => c.Email).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
             RuleFor(c => c.UserName).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
-            RuleFor(c => c.Role).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
-            RuleFor(c => c.Password).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
-            RuleFor(c => c.ConfirmPassword).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
-            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("Пароли должны совпадать!");
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<UserAddViewModel>.CreateWithOptions((UserAddViewModel)model, x => x.IncludeProperties(propertyName)));
+            var result = await ValidateAsync(ValidationContext<UserViewModel>.CreateWithOptions((UserViewModel)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);

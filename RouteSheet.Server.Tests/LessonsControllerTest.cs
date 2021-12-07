@@ -36,7 +36,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(200);
             result.Value.Should().NotBeNull();
             value.Should().BeOfType<List<Lesson>>();
-            value.Count().Should().Be(5);
+            value.Count.Should().Be(5);
         }
 
         [Fact(DisplayName = "Getting empty list of lessons should return Ok, be typeof<List> and count 0")]
@@ -55,7 +55,7 @@ namespace RouteSheet.Server.Tests
 
             result.StatusCode.Should().Be(200);
             value.Should().BeOfType<List<Lesson>>();
-            value.Count().Should().Be(0);
+            value.Count.Should().Be(0);
         }
 
         [Fact(DisplayName = "Adding new lesson should return created lesson")]
@@ -178,7 +178,7 @@ namespace RouteSheet.Server.Tests
             result.StatusCode.Should().Be(400);
         }
 
-        private Lesson Testlesson()
+        private static Lesson Testlesson()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
@@ -187,7 +187,7 @@ namespace RouteSheet.Server.Tests
         }
 
 
-        private IQueryable<Lesson> GetTestLessons()
+        private static IQueryable<Lesson> GetTestLessons()
         {
             var fixture = new Fixture().Customize(new AutoMoqCustomization());
             fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList().ForEach(b => fixture.Behaviors.Remove(b));
