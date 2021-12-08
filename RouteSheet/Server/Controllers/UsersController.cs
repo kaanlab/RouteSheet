@@ -48,7 +48,7 @@ namespace RouteSheet.Server.Controllers
                 await _userManager.CreateAsync(appUser, userViewModel.Password);
                 await _userManager.AddToRoleAsync(appUser, userViewModel.Role);
 
-                return Ok(ToUserViewModel(appUser));
+                return Ok(ReturnUserWithRole(appUser.UserName));
             }
             catch (Exception ex)
             {
@@ -61,25 +61,15 @@ namespace RouteSheet.Server.Controllers
         {
             try
             {
-                var usersWithRoles = (from user in _userManager.Users
-                                      from userRole in user.UserRoles
-                                      join role in _roleManager.Roles on userRole.RoleId equals
-                                      role.Id
-                                      select new
-                                      {
-                                          UserName = user.UserName,
-                                          Role = role.Name
-                                      }).ToList();
-
-                var userWithOldRole = usersWithRoles.First(u => u.UserName == userViewModel.UserName);
+                var userWithRole = ReturnUserWithRole(userViewModel.UserName);
                 var appUser = await _userManager.FindByNameAsync(userViewModel.UserName);
 
-                await _userManager.RemoveFromRoleAsync(appUser, userWithOldRole.Role);
+                await _userManager.RemoveFromRoleAsync(appUser, userWithRole.Role);
                 await _userManager.AddToRoleAsync(appUser, userViewModel.Role);
 
                 await _userManager.UpdateAsync(appUser);
 
-                return Ok(ToUserViewModel(appUser));
+                return Ok(ReturnUserWithRole(appUser.UserName));
 
             }
             catch (Exception ex)
@@ -128,19 +118,20 @@ namespace RouteSheet.Server.Controllers
         public ActionResult<string[]> GetRoles() => _roleManager.Roles.Select(r => r.Name).ToArray();
 
        
-        private UserViewModel ToUserViewModel(AppUser appUser)
+        private UserViewModel ReturnUserWithRole(string userName)
         {
-            //var user = _userManager.Users.FirstOrDefault(a => a.UserName == appUser.UserName);
+            var appUser = _userManager.Users.Where(a => a.UserName == userName).AsQueryable();
 
-            var userWithRoles = from userRole in appUser.UserRoles
+            var userWithRoles = from user in appUser
+                                from userRole in user.UserRoles
                                 join role in _roleManager.Roles on userRole.RoleId equals
                                 role.Id
                                 select new UserViewModel()
                                 {
-                                    Position = appUser.Position,
-                                    Name = appUser.Name,
-                                    UserName = appUser.UserName,
-                                    Email = appUser.Email,
+                                    Position = user.Position,
+                                    Name = user.Name,
+                                    UserName = user.UserName,
+                                    Email = user.Email,
                                     Role = role.Name
                                 };
             return userWithRoles.First();

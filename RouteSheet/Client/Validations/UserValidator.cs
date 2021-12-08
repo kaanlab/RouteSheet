@@ -11,6 +11,7 @@ namespace RouteSheet.Client.Validations
             RuleFor(c => c.Position).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
             RuleFor(c => c.Email).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
             RuleFor(c => c.UserName).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
+            RuleFor(c => c.Role).NotEmpty().WithMessage("Это поле обязательно для заполнения!");
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
