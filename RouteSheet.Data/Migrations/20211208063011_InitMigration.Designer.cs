@@ -12,7 +12,7 @@ using RouteSheet.Data;
 namespace RouteSheet.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211207080010_InitMigration")]
+    [Migration("20211208063011_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -319,7 +319,7 @@ namespace RouteSheet.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("RouteSheet.Shared.Models.AppUser", null)
-                        .WithMany()
+                        .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -328,7 +328,7 @@ namespace RouteSheet.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.HasOne("RouteSheet.Shared.Models.AppUser", null)
-                        .WithMany()
+                        .WithMany("Logins")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -343,7 +343,7 @@ namespace RouteSheet.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("RouteSheet.Shared.Models.AppUser", null)
-                        .WithMany()
+                        .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -352,7 +352,7 @@ namespace RouteSheet.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.HasOne("RouteSheet.Shared.Models.AppUser", null)
-                        .WithMany()
+                        .WithMany("Tokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -389,7 +389,15 @@ namespace RouteSheet.Data.Migrations
 
             modelBuilder.Entity("RouteSheet.Shared.Models.AppUser", b =>
                 {
+                    b.Navigation("Claims");
+
                     b.Navigation("Lessons");
+
+                    b.Navigation("Logins");
+
+                    b.Navigation("Tokens");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("RouteSheet.Shared.Models.Cadet", b =>

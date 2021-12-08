@@ -16,7 +16,7 @@
             <MudTh>Должность</MudTh>
             <MudTh>Логин</MudTh>
             <MudTh>Почта</MudTh>
-            <MudTh></MudTh>
+            <MudTh>Роль</MudTh>
             <MudTh></MudTh>
             <MudTh></MudTh>
             <MudTh></MudTh>
@@ -26,9 +26,9 @@
             <MudTd DataLabel="Должность">@context.Position</MudTd>
             <MudTd DataLabel="Логин">@context.UserName</MudTd>
             <MudTd DataLabel="Почта">@context.Email</MudTd>
+            <MudTd DataLabel="Роль">@context.Role</MudTd>
             <MudTd><MudButton Color="Color.Info" @onclick="@((e) => Update(context))">Изменить</MudButton></MudTd>
             <MudTd><MudButton Color="Color.Warning" @onclick="@((e) => Delete(context))">Сменить пароль</MudButton></MudTd>
-            <MudTd><MudButton Color="Color.Warning" @onclick="@((e) => Delete(context))">Сменить роль</MudButton></MudTd>
             <MudTd><MudButton Color="Color.Error" @onclick="@((e) => Delete(context))">Удалить</MudButton></MudTd>
 
         </RowTemplate>

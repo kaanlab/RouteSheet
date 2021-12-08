@@ -14,6 +14,23 @@
             <MudTextField Label="Должность" @bind-Value="Context.Position" Validation="@(validator.ValidateValue)" For="@(() => Context.Name)" />
             <MudTextField Label="Логин" @bind-Value="Context.UserName" Validation="@(validator.ValidateValue)" For="@(() => Context.UserName)" />
             <MudTextField Label="Почта" @bind-Value="Context.Email" Validation="@(validator.ValidateValue)" For="@(() => Context.Email)" />
+            <br />
+            <div>
+                <MudSelect Label="Выберите роль" @bind-Value="Context.Role" Validation="@(validator.ValidateValue)" For="@(() => Context.Role)">
+                    @if (roles is null)
+                    {
+                        <MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        @foreach (var role in roles)
+                        {
+                            <MudSelectItem Value="@role">@role</MudSelectItem>
+                        }
+                    }
+                </MudSelect>
+                <br />
+            </div>
         </MudForm>
     </DialogContent>
     <DialogActions>
@@ -30,6 +47,13 @@
     [Parameter] public UserViewModel Context { get; set; }
 
     MudForm form;
+
+    string[] roles;
+
+    protected override async Task OnInitializedAsync()
+    {
+        roles = await httpClient.GetFromJsonAsync<string[]>("api/users/allroles");
+    }
 
     private async Task Add()
     {

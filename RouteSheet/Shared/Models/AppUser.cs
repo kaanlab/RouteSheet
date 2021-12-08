@@ -17,12 +17,17 @@ namespace RouteSheet.Shared.Models
         //
         public IEnumerable<Lesson> Lessons { get; set; }
 
-        public UserViewModel ToUserViewModel() => new UserViewModel()
-        {
-            Name = this.Name,
-            Position = this.Position,
-            UserName = this.UserName,
-            Email = this.Email
-        };
+        public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+        public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+        public virtual ICollection<IdentityUserToken<string>> Tokens { get; set; }
+        public virtual ICollection<IdentityUserRole<string>> UserRoles { get; set; }
+
+        //public UserViewModel ToUserViewModel() => new UserViewModel()
+        //{
+        //    Name = this.Name,
+        //    Position = this.Position,
+        //    UserName = this.UserName,
+        //    Email = this.Email
+        //};
     }
 }
