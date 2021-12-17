@@ -34,6 +34,10 @@ a, .btn-link {
     color: red;
 }
 
+table, th, td {
+    border: 1px solid black;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
