@@ -15,12 +15,12 @@ namespace RouteSheet.Shared.ViewModels
         public string Email { get; set; }
         public string Role { get; set; }
 
-        public AppUser ToAppUser() => new AppUser()
-        {
-            Name = this.Name,
-            Position = this.Position,
-            UserName = this.UserName,
-            Email = this.Email
-        };
+        //public AppUser ToAppUser() => new AppUser()
+        //{
+        //    Name = this.Name,
+        //    Position = this.Position,
+        //    UserName = this.UserName,
+        //    Email = this.Email            
+        //};
     }
 }
