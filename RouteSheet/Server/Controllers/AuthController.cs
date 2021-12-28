@@ -5,6 +5,7 @@ using RouteSheet.Server.Services;
 using RouteSheet.Shared;
 using RouteSheet.Shared.Models;
 using RouteSheet.Shared.ViewModels;
+using System.Security.Claims;
 
 namespace RouteSheet.Server.Controllers
 {
@@ -32,7 +33,7 @@ namespace RouteSheet.Server.Controllers
             }
 
             var user = await _userManager.FindByNameAsync(loginModel.Login);
-            if (user == null)
+            if (user is null)
             {
                 return Unauthorized(new LoginResultViewModel { Successful = false, Error = "Неверное имя пользователя или пароль!" });
             }
@@ -40,14 +41,34 @@ namespace RouteSheet.Server.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginModel.Password, false);
             if (result.Succeeded)
             {
+                var claims = await GetClaims(user);
+                
                 return new LoginResultViewModel
                 {
                     Successful = true,
-                    Token = await _jwtTokenService.Create(user, GlobalVarables.KEY)
+                    Token = await _jwtTokenService.Create(GlobalVarables.KEY, claims)
                 };
             }
 
             return Unauthorized(new LoginResultViewModel { Successful = false, Error = "Неверное имя пользователя или пароль!" });
+        }
+
+        private async Task<IList<Claim>> GetClaims(AppUser user)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.GivenName, user.Position)
+            };
+            var roles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            return claims;
         }
     }
 }

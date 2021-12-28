@@ -8,29 +8,8 @@ namespace RouteSheet.Server.Services
 {
     public class JwtTokenService : IJwtTokenService
     {
-        private readonly UserManager<AppUser> _userManager;
-
-        public JwtTokenService(UserManager<AppUser> userManager)
+        public async Task<string> Create(SymmetricSecurityKey key, IList<Claim> claims)
         {
-            _userManager = userManager;
-        }
-
-        public async Task<string> Create(AppUser appUser, SymmetricSecurityKey key)
-        {
-            var roles = await _userManager.GetRolesAsync(appUser);
-
-            var claims = new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, appUser.Id.ToString()),
-                new Claim(ClaimTypes.Name, appUser.UserName),
-                new Claim(ClaimTypes.GivenName, appUser.Position)
-            };
-
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var tokenDescriptor = new SecurityTokenDescriptor

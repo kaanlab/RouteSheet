@@ -9,7 +9,7 @@ namespace RouteSheet.Shared
 {
     public class GlobalVarables
     {
-        public static readonly SymmetricSecurityKey KEY = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("sOmeran0meString!"));
+        public static readonly SymmetricSecurityKey KEY = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("33-l0ng-charaCter-Jwt-secRet-keY!"));
         public static class Roles
         {
             public const string ADMIN = "admin";
