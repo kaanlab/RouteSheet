@@ -3,35 +3,44 @@
 @inject IAuthService AuthService
 @inject NavigationManager NavigationManager
 
-<MudText Typo="Typo.h4">Авторизация</MudText>
-@if (ShowAuthError)
-{
-    <MudText Color="@Color.Error">
-        <p>@Error</p>
-    </MudText>
-}
-<EditForm Model="loginModel" OnValidSubmit="ExecuteLogin">
-    <DataAnnotationsValidator />
-    <MudCard>
-        <MudCardContent>
-            <MudTextField Label="Логин"
-                          @bind-Value="loginModel.Login" For="@(() => loginModel.Login)" />
-            <MudTextField Label="Пароль" Class="mt-3"
-                          @bind-Value="loginModel.Password" For="@(() => loginModel.Password)" InputType="InputType.Password" />
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Вход</MudButton>
-        </MudCardActions>
-    </MudCard>
-</EditForm>
+<PageTitle>Авторизация</PageTitle>
+
+<div class="d-flex justify-center mt-6">
+
+    <MudItem xs="8" md="8">
+        <div class="flex-column">
+            <MudText Typo="Typo.h4">Авторизация</MudText>
+            @if (ShowAuthError)
+            {
+                <MudText Color="@Color.Error">
+                    <p>@Error</p>
+                </MudText>
+            }
+            <EditForm Model="loginModel" OnValidSubmit="ExecuteLogin">
+                <DataAnnotationsValidator />
+                <MudCard>
+                    <MudCardContent>
+                        <MudTextField Label="Логин"
+                                      @bind-Value="loginModel.Login" For="@(() => loginModel.Login)" />
+                        <MudTextField Label="Пароль" Class="mt-3"
+                                      @bind-Value="loginModel.Password" For="@(() => loginModel.Password)" InputType="InputType.Password" />
+                    </MudCardContent>
+                    <MudCardActions>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Вход</MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </EditForm>
+        </div>
+    </MudItem>
+</div>
 
 @code {
-    private LoginViewModel loginModel = new LoginViewModel();
+    LoginViewModel loginModel = new LoginViewModel();
 
+    bool ShowAuthError;
+    string Error;
 
-    public bool ShowAuthError { get; set; }
-    public string Error { get; set; }
-    public async Task ExecuteLogin()
+    async Task ExecuteLogin()
     {
         ShowAuthError = false;
         var result = await AuthService.Login(loginModel);

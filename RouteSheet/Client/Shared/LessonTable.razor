@@ -1,53 +1,59 @@
-﻿
-<table>
-    <tr>
-        <td colspan="6" class="date">на период с @monday.ToString("dd.MM") по @sunday.ToString("dd.MM") @monday.ToString("yyyy")г.</td>
-    </tr>
-    <tr>
-        <td rowspan="2">День недели</td>
-        <td colspan="4">СП, ДО, ВНУ, индивидуальные занятия</td>
-        <td rowspan="2">Медицинский пункт</td>
-    </tr>
-    <tr>
-        <td>1 час</td>
-        <td>2 час</td>
-        <td>3 час</td>
-        <td>4 час</td>
-    </tr>
-
-
-    @for (int date = 0; date < 6; date++)
-    {
+﻿<div class="d-flex justify-center mt-6">
+    <table>
         <tr>
-            <td>@daysOfWeek[date]</td>
-        
-            @for (int hour = 1; hour <= 5; hour++)
-            {
-                <LessonTd CurrentDate="date" CurrentHour="hour" FirsDayOfWeek="monday" />
-            }
+            <td colspan="6" class="date">на период с @monday.ToString("dd.MM") по @sunday.ToString("dd.MM") @monday.ToString("yyyy")г.</td>
         </tr>
-    }
-    <tr>
-        <td>Примечание</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
+        <tr>
+            <td rowspan="2">День недели</td>
+            <td colspan="4">СП, ДО, ВНУ, индивидуальные занятия</td>
+            <td rowspan="2">Медицинский пункт</td>
+        </tr>
+        <tr>
+            <td>1 час</td>
+            <td>2 час</td>
+            <td>3 час</td>
+            <td>4 час</td>
+        </tr>
 
-<div align="center" style="margin-top: 10px;">
-    <MudButton Variant="Variant.Outlined" OnClick="prevWeek">&larr;</MudButton>
-    <MudButton Variant="Variant.Outlined" OnClick="nextWeek">&rarr;</MudButton>
+
+        @for (int date = 0; date < 6; date++)
+        {
+            <tr>
+                <td>@daysOfWeek[date]</td>
+
+                @for (int hour = 1; hour <= 5; hour++)
+                {
+                    <LessonTd CurrentDate="date" CurrentHour="hour" FirsDayOfWeek="monday" />
+                }
+            </tr>
+        }
+        <tr>
+            <td>Примечание</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
 </div>
 
-<div class="d-flex flex-wrap" style="margin-top: 20px;">
-    <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnLessonAdd" Style="margin: 10px;">Добавить занятие</MudButton>
-    <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnMedLessonAdd" Style="margin: 10px;">Добавить занятие</MudButton>
+<div class="d-flex justify-center mt-6">
+    <MudButton Variant="Variant.Outlined" OnClick="prevWeek" Class="pa-2 mx-2">&larr;</MudButton>
+    <MudButton Variant="Variant.Outlined" OnClick="nextWeek" Class="pa-2 mx-2">&rarr;</MudButton>
 </div>
 
-@code { 
+<div class="d-flex justify-center mt-6">
+    <AuthorizeView Roles="@($"{GlobalVarables.Roles.ADMIN}, {GlobalVarables.Roles.TEACHER}")">
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnLessonAdd" Class="pa-2 mx-2">Добавить занятие</MudButton>
+    </AuthorizeView>
+    <AuthorizeView Roles="@($"{GlobalVarables.Roles.ADMIN}, {GlobalVarables.Roles.MEDIC}")">
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnMedLessonAdd" Class="pa-2 mx-2">Добавить запись</MudButton>
+    </AuthorizeView>
+
+</div>
+
+@code {
 
     DateTime currentDate = DateTime.Now;
     DateTime monday;

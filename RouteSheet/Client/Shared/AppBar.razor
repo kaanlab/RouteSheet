@@ -1,0 +1,16 @@
+﻿<MudAppBar Color="Color.Primary" Fixed="false">
+    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />
+    <MudSpacer />
+    <AuthorizeView>
+        <Authorized>
+            <MudIconButton Icon="@Icons.Material.Outlined.Logout" Color="Color.Inherit" Link="/logout" />
+        </Authorized>
+        <NotAuthorized>
+            <MudIconButton Icon="@Icons.Material.Outlined.Login" Color="Color.Inherit" Link="/login" />
+        </NotAuthorized>
+    </AuthorizeView>
+</MudAppBar>
+
+@code {
+
+}
