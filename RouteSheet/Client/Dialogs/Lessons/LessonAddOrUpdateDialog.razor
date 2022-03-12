@@ -13,7 +13,7 @@
         <div>
             <MudText Typo="Typo.h5">Приоритет</MudText><br />
             <MudSelect @bind-Value="Context.Prioriy" >
-                @foreach(var item in Enum.GetValues(typeof(Priority)))
+                @foreach(Priority item in Enum.GetValues(typeof(Priority)))
                 {
                     <MudSelectItem Value="@item">@item</MudSelectItem> 
                 }
@@ -33,6 +33,8 @@
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
     [Parameter] public Lesson Context { get; set; } = new Lesson();
+
+    //private Priority enumValue { get; set; } = Priority.;
 
     public void AddOrUpdate()
     {
