@@ -47,10 +47,10 @@
 
 <div class="d-flex justify-center mt-6">
     <AuthorizeView Roles="@($"{GlobalVarables.Roles.ADMIN}, {GlobalVarables.Roles.TEACHER}")">
-        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnLessonAdd" Class="pa-2 mx-2">Добавить занятие</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="OnLessonAdd" Class="pa-2 mx-2"><MudIcon Icon="@Icons.Filled.School" /> Занятие</MudButton>
     </AuthorizeView>
     <AuthorizeView Roles="@($"{GlobalVarables.Roles.ADMIN}, {GlobalVarables.Roles.MEDIC}")">
-        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnMedLessonAdd" Class="pa-2 mx-2">Добавить запись</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnMedLessonAdd" Class="pa-2 mx-2"><MudIcon Icon="@Icons.Filled.MedicalServices" /> Медпункт</MudButton>
     </AuthorizeView>
 
 </div>

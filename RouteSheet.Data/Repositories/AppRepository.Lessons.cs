@@ -110,7 +110,7 @@ namespace RouteSheet.Data.Repositories
             }
         }
 
-        public IQueryable<Lesson> AllLessons() => _appDbContext.Lessons.AsQueryable();
+        public IQueryable<Lesson> AllLessons() => _appDbContext.Lessons.Include(x => x.Cadet).Include(x => x.AppUser).AsQueryable();
 
         public async ValueTask<Lesson> FindLessonById(int id) => await _appDbContext.Lessons.FindAsync(id);
     }

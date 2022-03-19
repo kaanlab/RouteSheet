@@ -1,28 +1,43 @@
 ﻿@if (lessons.Count() > 0)
 {
     <td>
+        <div  class="route-sheet-td">
         @foreach (var lesson in lessons)
         {
-          <div class="left">
-            <i>
-                @lesson.AppUser.Name
-            </i>
-            <br />
-            @lesson.Title
-          </div>
-          <div class="right">
-            <MudText Typo="Typo.caption">
-                <MudIcon Icon="@Icons.Material.Filled.Edit" @onclick="@((e) => OnUpdateLesson(lesson))" Color="Color.Info" Class="icon"></MudIcon>
-                <br />
-                <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="@((e) => OnDeleteLesson(lesson))" Color="Color.Error" Class="icon"></MudIcon>
-            </MudText>
-         </div>
+            <MudCard Class="route-sheet-card">
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.h6">Занятие</MudText>
+                    </CardHeaderContent>
+                    <CardHeaderActions>
+                        @if (lesson.Prioriy == Priority.High)
+                        {
+                            <MudIconButton Icon="@Icons.Filled.PriorityHigh" Color="Color.Error" />
+                        }
+                        else
+                        {
+                            <MudIconButton Icon="@Icons.Filled.LowPriority" Color="Color.Default" />
+                        }
+                    </CardHeaderActions>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>@lesson.Title</MudText>
+                    <MudText Typo="Typo.body2">@lesson.AppUser.Name</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudIcon Icon="@Icons.Material.Filled.Edit" @onclick="@((e) => OnUpdateLesson(lesson))" Color="Color.Info" Class="icon"></MudIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.Delete" @onclick="@((e) => OnDeleteLesson(lesson))" Color="Color.Error" Class="icon"></MudIcon>
+                </MudCardActions>
+            </MudCard>            
         }
-    </td> 
+        </div>
+    </td>
 }
 else
 {
-  <td></td>
+    <td>
+        <div class="route-sheet-td"></div>
+    </td>
 }
 
 

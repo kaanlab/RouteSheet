@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RouteSheet.Data.Exceptions;
 using RouteSheet.Data.Repositories;
 using RouteSheet.Shared.Models;
+using RouteSheet.Shared.ViewModels;
 
 namespace RouteSheet.Server.Controllers
 {
@@ -17,18 +18,33 @@ namespace RouteSheet.Server.Controllers
         }
 
         [HttpGet("all")]
-        public ActionResult<IList<Lesson>> GetLessons() =>
-            _appRepository.AllLessons() is IQueryable<Lesson> lessons
-            ? Ok(lessons.ToList())
-            : NotFound();
+        public ActionResult<IList<Lesson>> GetLessons()
+        {
+            var lessons = _appRepository.AllLessons().ToList();
+            return lessons;
+        }
+            //_appRepository.AllLessons() is IQueryable<Lesson> lessons
+            //? Ok(lessons.ToList())
+            //: NotFound();
 
 
         [HttpPost("add")]
-        public async Task<ActionResult<Lesson>> Add(Lesson lesson)
+        public async Task<ActionResult<Lesson>> Add(LessonAddViewModel lesson)
         {
             try
             {
-                var createdLesson = await _appRepository.AddLesson(lesson);
+                var appUser = await _appRepository.FindUserById(lesson.AppUserId);
+                var cadet = await _appRepository.FindCadetById(lesson.CadetId);
+                var newLesson = new Lesson
+                {
+                    AppUser = appUser,
+                    Cadet = cadet,
+                    Date = lesson.Date,
+                    Hour = lesson.Hour,
+                    Prioriy = lesson.Prioriy,
+                    Title = lesson.Title
+                };
+                var createdLesson = await _appRepository.AddLesson(newLesson);
                 return Ok(createdLesson);
             }
             catch (AppRepositoryException ex)

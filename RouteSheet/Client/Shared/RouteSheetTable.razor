@@ -2,13 +2,14 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
+
 <CascadingValue Value="this">
     <LessonTable />
 </CascadingValue>
 
 @code {
 
-    public List<Lesson> lessons = new();
+    public List<Lesson> lessons = new List<Lesson>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -21,7 +22,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var response = await httpClient.PostAsJsonAsync<Lesson>("api/lessons/add", result.Data as Lesson);
+            var response = await httpClient.PostAsJsonAsync<LessonAddViewModel>("api/lessons/add", result.Data as LessonAddViewModel);
             if (response.IsSuccessStatusCode)
             {
                 var addedLesson = await response.Content.ReadFromJsonAsync<Lesson>();
@@ -31,7 +32,7 @@
             else
             {
                 var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>();
-                Snackbar.Add($"Не могу добавить занятие! {problem.Title}", Severity.Error);
+                Snackbar.Add($"Ошибка! {problem.Title}", Severity.Error);
             }
         }
         StateHasChanged();

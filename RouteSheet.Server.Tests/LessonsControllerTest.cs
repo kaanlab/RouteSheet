@@ -58,69 +58,69 @@ namespace RouteSheet.Server.Tests
             value.Count.Should().Be(0);
         }
 
-        [Fact(DisplayName = "Adding new lesson should return created lesson")]
-        public async Task Test_003()
-        {
-            // Arrange
-            var testLesson = Testlesson();
-            var newLesson = new Lesson()
-            {
-                AppUser = testLesson.AppUser,
-                Cadet = testLesson.Cadet,
-                Date = testLesson.Date,
-                Hour = testLesson.Hour,
-                Prioriy = testLesson.Prioriy,
-                Title = testLesson.Title,
-            };
-            var mockRepo = new Mock<IAppRepository>();
-            mockRepo.Setup(repo => repo.AddLesson(newLesson))
-                .ReturnsAsync(testLesson);
-            var controller = new LessonsController(mockRepo.Object);
+        //[Fact(DisplayName = "Adding new lesson should return created lesson")]
+        //public async Task Test_003()
+        //{
+        //    // Arrange
+        //    var testLesson = Testlesson();
+        //    var newLesson = new Lesson()
+        //    {
+        //        AppUser = testLesson.AppUser,
+        //        Cadet = testLesson.Cadet,
+        //        Date = testLesson.Date,
+        //        Hour = testLesson.Hour,
+        //        Prioriy = testLesson.Prioriy,
+        //        Title = testLesson.Title,
+        //    };
+        //    var mockRepo = new Mock<IAppRepository>();
+        //    mockRepo.Setup(repo => repo.AddLesson(newLesson))
+        //        .ReturnsAsync(testLesson);
+        //    var controller = new LessonsController(mockRepo.Object);
 
-            // Act
-            var cut = await controller.Add(newLesson);
-            var result = cut.Result as OkObjectResult;
-            var value = result.Value as Lesson;
+        //    // Act
+        //    var cut = await controller.Add(newLesson);
+        //    var result = cut.Result as OkObjectResult;
+        //    var value = result.Value as Lesson;
 
-            result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Lesson>();
-            value.Id.Should().Be(testLesson.Id);
-        }
+        //    result.StatusCode.Should().Be(200);
+        //    value.Should().BeOfType<Lesson>();
+        //    value.Id.Should().Be(testLesson.Id);
+        //}
 
-        [Fact(DisplayName = "Updating existing lesson should return lesson with updated fields")]
-        public async Task Test_004()
-        {
-            // Arrange
-            var lessonInDb = Testlesson();
-            var updatedLesson = new Lesson()
-            {
-                Id = lessonInDb.Id,
-                AppUserId = lessonInDb.AppUserId,
-                AppUser = lessonInDb.AppUser,
-                CadetId = lessonInDb.CadetId,
-                Cadet = lessonInDb.Cadet,
-                Date = lessonInDb.Date,
-                Hour = lessonInDb.Hour,
-                Prioriy = lessonInDb.Prioriy,
-                Title = "new Title",
-            };
+        //[Fact(DisplayName = "Updating existing lesson should return lesson with updated fields")]
+        //public async Task Test_004()
+        //{
+        //    // Arrange
+        //    var lessonInDb = Testlesson();
+        //    var updatedLesson = new Lesson()
+        //    {
+        //        Id = lessonInDb.Id,
+        //        AppUserId = lessonInDb.AppUserId,
+        //        AppUser = lessonInDb.AppUser,
+        //        CadetId = lessonInDb.CadetId,
+        //        Cadet = lessonInDb.Cadet,
+        //        Date = lessonInDb.Date,
+        //        Hour = lessonInDb.Hour,
+        //        Prioriy = lessonInDb.Prioriy,
+        //        Title = "new Title",
+        //    };
 
-            var mockRepo = new Mock<IAppRepository>();
-            mockRepo.Setup(repo => repo.FindLessonById(lessonInDb.Id))
-                .ReturnsAsync(lessonInDb);
-            mockRepo.Setup(repo => repo.UpdateLesson(updatedLesson))
-                .ReturnsAsync(updatedLesson);
-            var controller = new LessonsController(mockRepo.Object);
+        //    var mockRepo = new Mock<IAppRepository>();
+        //    mockRepo.Setup(repo => repo.FindLessonById(lessonInDb.Id))
+        //        .ReturnsAsync(lessonInDb);
+        //    mockRepo.Setup(repo => repo.UpdateLesson(updatedLesson))
+        //        .ReturnsAsync(updatedLesson);
+        //    var controller = new LessonsController(mockRepo.Object);
 
-            // Act
-            var cut = await controller.Update(updatedLesson);
-            var result = cut.Result as OkObjectResult;
-            var value = result.Value as Lesson;
+        //    // Act
+        //    var cut = await controller.Update(updatedLesson);
+        //    var result = cut.Result as OkObjectResult;
+        //    var value = result.Value as Lesson;
 
-            result.StatusCode.Should().Be(200);
-            value.Should().BeOfType<Lesson>();
-            value.Title.Should().Be("new Title");
-        }
+        //    result.StatusCode.Should().Be(200);
+        //    value.Should().BeOfType<Lesson>();
+        //    value.Title.Should().Be("new Title");
+        //}
 
         [Fact(DisplayName = "Updating not existing lesson should return Problem")]
         public async Task Test_005()

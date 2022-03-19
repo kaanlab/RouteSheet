@@ -7,14 +7,15 @@ using RouteSheet.Data.Repositories;
 using RouteSheet.Server.Services;
 using RouteSheet.Shared;
 using RouteSheet.Shared.Models;
-
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("SqlConnection");
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); ;
 
 builder.Services.AddRazorPages();
 

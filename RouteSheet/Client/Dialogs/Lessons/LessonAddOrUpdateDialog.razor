@@ -1,4 +1,6 @@
-﻿<MudDialog>
+﻿@inject HttpClient httpClient
+
+<MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6" Color="Color.Info">
             <MudIcon Icon="@Icons.Material.Filled.Update" Title="@MudDialog.Title" />
@@ -6,39 +8,80 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <MudDatePicker Label="Дата занятия" @bind-Date="Context.Date" Orientation="Orientation.Landscape" DisableToolbar="true"/>
-        <MudNumericField @bind-Value="Context.Hour" Label="Час занятия" Variant="Variant.Text" Min="1" Max="4" />
+
+        <!-- Кадет  -->
+        @if (cadets is not null)
+        {
+            <MudSelect T="CadetViewModel" @bind-Value="selectedCadet" Label="Выберите кадета" AnchorOrigin="Origin.BottomCenter">
+                @foreach (var cadet in cadets)
+                {
+                    <MudSelectItem Value="@cadet">@cadet.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
+        else
+        {
+            <MudSelect Disabled="true" T="string" Label="Авторы отсутствуют" Variant="Variant.Outlined" />
+        }
+
+        <!-- Календарь  -->
+        <MudDatePicker Label="Дата занятия" @bind-Date="Context.Date" Orientation="Orientation.Landscape" DisableToolbar="true" />
+
+        <!-- Время занятия  -->
+        <MudNumericField @bind-Value="Context.Hour" Label="Час занятия" Variant="Variant.Text" Min="1" Max="4" />        
+
+        <!-- Название занятия  -->
         <MudTextField T="string" Label="Название" @bind-Text="Context.Title" />
         <br />
+
+        <!-- Приоритет  -->
         <div>
             <MudText Typo="Typo.h5">Приоритет</MudText><br />
-            <MudSelect @bind-Value="Context.Prioriy" >
-                @foreach(Priority item in Enum.GetValues(typeof(Priority)))
+            <MudSelect @bind-Value="Context.Prioriy">
+                @foreach (Priority item in Enum.GetValues(typeof(Priority)))
                 {
-                    <MudSelectItem Value="@item">@item</MudSelectItem> 
+                    <MudSelectItem Value="@item">@item.GetDisplayName()</MudSelectItem>
                 }
             </MudSelect><br />
-            <MudText>Приоритет занятия: @Context.Prioriy</MudText>
+            <MudText>Приоритет занятия: @Context.Prioriy.GetDisplayName()</MudText>
         </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Отмена</MudButton>
-        
         <MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="AddOrUpdate">Обновить</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
 
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public Lesson Context { get; set; } = new Lesson();
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    //private Priority enumValue { get; set; } = Priority.;
+    [Parameter]
+    public LessonAddViewModel Context { get; set; } = new LessonAddViewModel();
+
+    IEnumerable<CadetViewModel> cadets;
+
+    string? userId;
+
+    CadetViewModel selectedCadet;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+        userId = user.Claims.First(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        cadets = await httpClient.GetFromJsonAsync<CadetViewModel[]>("api/cadets/all");
+    }
 
     public void AddOrUpdate()
     {
         //Add AppUser!!!
+
+        Context.CadetId = selectedCadet.Id;
+        Context.AppUserId = userId;
 
         MudDialog.Close(DialogResult.Ok(Context));
     }
